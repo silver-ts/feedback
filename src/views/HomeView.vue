@@ -1,3 +1,5 @@
 <template>
-  <div>List of posts ...</div>
+  <main>
+    <div>List of posts ...</div>
+  </main>
 </template>

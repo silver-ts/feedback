@@ -10,7 +10,7 @@ import globals from '@/globals'
         href="https://vuejs.org/"
         target="_blank"
         rel="noopener noreferrer"
-        class="text-indigo-500 hover:text-indigo-500/80 transition-opacity"
+        class="text-indigo-500 hover:text-indigo-500/80 transition"
       >
         Vue.js
       </a>
@@ -19,7 +19,7 @@ import globals from '@/globals'
         href="https://firebase.google.com/"
         target="_blank"
         rel="noopener noreferrer"
-        class="text-indigo-500 hover:text-indigo-500/80 transition-opacity"
+        class="text-indigo-500 hover:text-indigo-500/80 transition"
       >
         Firebase
       </a>
@@ -29,7 +29,7 @@ import globals from '@/globals'
       :href="globals.githubSource"
       target="_blank"
       rel="noopener noreferrer"
-      class="block text-indigo-500 hover:text-indigo-500/80 transition-opacity mt-1"
+      class="block text-indigo-500 hover:text-indigo-500/80 transition mt-1"
     >
       <font-awesome-icon icon="fa-brands fa-github" class="h-4 w-4 mr-2"></font-awesome-icon>
       <span>Source on Github</span>

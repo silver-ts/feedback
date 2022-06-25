@@ -5,9 +5,7 @@ import PageFooter from '@/components/PageFooter.vue'
 
 <template>
   <NavBar />
-  <main class="container mx-auto max-w-7xl px-2 sm:px-4">
-    <router-view />
-  </main>
+  <router-view />
   <PageFooter />
 </template>
 
