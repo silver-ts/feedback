@@ -1,6 +1,8 @@
 <template>
-  <nav class="fixed top-0 left-0 w-full sm:px-4 bg-white border-b drop-shadow-sm">
-    <div
+  <header
+    class="fixed top-0 left-0 w-full sm:px-4 bg-white border-b border-gray-300/70 drop-shadow-sm z-40"
+  >
+    <nav
       class="container h-[var(--header-height)] mx-auto max-w-7xl flex items-center justify-between"
     >
       <router-link to="/" class="text-xl mx-2 font-light">✨ Vue Feedback</router-link>
@@ -14,6 +16,6 @@
           </router-link>
         </li>
       </ul>
-    </div>
-  </nav>
+    </nav>
+  </header>
 </template>

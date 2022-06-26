@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --color-text: rgb(64 64 64);
   --color-background: rgb(245 245 245);
 
   --header-height: 58px;
+  --aside-top: 90px; /* 58px + 32px => header height + main top padding */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,9 +23,8 @@
   }
 
   body {
-    @apply leading-relaxed font-normal text-base flex flex-col;
+    @apply leading-relaxed font-normal text-base flex flex-col text-gray-900;
     padding-top: var(--header-height);
-    color: var(--color-text);
     background-color: var(--color-background);
     font-family: 'Heebo', Inter, -apple-system, Roboto, sans-serif;
     text-rendering: optimizeLegibility;
