@@ -1,7 +1,7 @@
 <script setup>
 import router from '@/router'
 
-import AuthLayout from '@/components/AuthLayout.vue'
+import AuthContainer from '@/components/AuthContainer.vue'
 
 const debug = (msg) => {
   console.log(msg || 'success')
@@ -13,7 +13,7 @@ const handleAnonymousSignIn = () => {
 </script>
 
 <template>
-  <AuthLayout :title="`Welcome to Vue Feedback!`">
+  <AuthContainer :title="`Welcome to Vue Feedback!`">
     <button
       class="bg-transparent py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-500 text-indigo-500 hover:text-white transition-all relative h-11"
       @click="debug('sign in w/ Google')"
@@ -31,5 +31,5 @@ const handleAnonymousSignIn = () => {
       <font-awesome-icon icon="fa-solid fa-arrow-left" class="mr-2" />
       <span>Back to the Home page</span>
     </router-link>
-  </AuthLayout>
+  </AuthContainer>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <header
-    class="fixed top-0 left-0 w-full sm:px-4 bg-white border-b border-gray-300/70 drop-shadow-sm z-40"
+    class="fixed top-0 left-0 w-full sm:px-4 bg-white border-b border-gray-400/50 drop-shadow-sm z-40"
   >
     <nav
       class="container h-[var(--header-height)] mx-auto max-w-7xl flex items-center justify-between"

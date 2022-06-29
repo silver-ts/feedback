@@ -4,6 +4,7 @@ import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import EnterNameView from '@/views/EnterNameView.vue'
 import PostView from '@/views/PostView.vue'
+import UserProfileView from '@/views/UserProfileView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -27,6 +28,11 @@ const router = createRouter({
       path: '/users/:username/:postId',
       name: 'user-post',
       component: PostView,
+    },
+    {
+      path: '/users/:username',
+      name: 'user-profile',
+      component: UserProfileView,
     },
   ],
 })
