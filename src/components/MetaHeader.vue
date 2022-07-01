@@ -10,8 +10,8 @@ defineProps({
     <div class="mr-2 w-8 h-8 rounded-full bg-blue-500/50"></div>
     <div>
       <router-link
-        to="/users/username1"
-        class="p-1 font-semibold rounded hover:bg-gray-200/50 transition"
+        to="/username1"
+        class="p-1 text-sm sm:text-base font-semibold rounded hover:bg-gray-200/50 transition"
       >
         {{ author }}
       </router-link>

@@ -10,7 +10,7 @@ defineProps({
 <template>
   <article class="mb-4">
     <router-link
-      :to="`/users/${author}/${postId}`"
+      :to="`/${author}/${postId}`"
       class="block bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:p-6"
     >
       <MetaHeader :author="`Jainden`" :createdAt="`Jun 25 (16 hours ago)`" />
