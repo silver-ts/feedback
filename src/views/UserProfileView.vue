@@ -1,12 +1,20 @@
 <script setup>
+import { inject } from 'vue'
 import PostItem from '@/components/PostItem.vue'
+import UserAvatar from '@/components/UserAvatar.vue'
+
+const { user } = inject('auth')
 </script>
 
 <template>
   <main>
     <header class="text-center">
-      <div class="w-14 sm:w-28 h-14 sm:h-28 mx-auto rounded-full bg-blue-500/50"></div>
-      <h2 class="mt-4 sm:mt-5 text-xl sm:text-3xl font-semibold">Jaiden</h2>
+      <UserAvatar
+        class="w-14 sm:w-28 h-14 sm:h-28 mx-auto"
+        :iconSize="`3x`"
+        :photoURL="user.photoURL"
+      />
+      <h2 class="mt-4 sm:mt-5 text-xl sm:text-3xl font-semibold">{{ user.displayName }}</h2>
       <span class="mt-1 sm:mt-2 block">@jaiden21</span>
     </header>
 

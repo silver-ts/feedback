@@ -1,5 +1,8 @@
 <script setup>
+import UserAvatar from '@/components/UserAvatar.vue'
+
 defineProps({
+  photoURL: String,
   author: String,
   createdAt: String,
 })
@@ -7,7 +10,7 @@ defineProps({
 
 <template>
   <div class="flex items-center">
-    <div class="mr-2 w-8 h-8 rounded-full bg-blue-500/50"></div>
+    <UserAvatar :photoURL="photoURL" class="mr-2" />
     <div>
       <router-link
         to="/username1"

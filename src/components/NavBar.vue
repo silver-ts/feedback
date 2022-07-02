@@ -1,7 +1,8 @@
 <script setup>
+import { inject } from 'vue'
 import NavMenu from '@/components/NavMenu.vue'
 
-const user = true
+const { user, loading } = inject('auth')
 </script>
 
 <template>
@@ -13,7 +14,7 @@ const user = true
     >
       <router-link to="/" class="text-xl mx-2 sm:mx-4 font-light">✨ Vue Feedback</router-link>
       <ul class="flex items-center">
-        <template v-if="user">
+        <template v-if="user && !loading">
           <li>
             <router-link
               to="/new"
