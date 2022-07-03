@@ -19,6 +19,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.1",
     "@headlessui/vue": "^1.6.5",
     "firebase": "^9.8.4",
+    "lodash.debounce": "^4.0.8",
     "vue": "^3.2.37",
     "vue-router": "^4.0.16"
   },
