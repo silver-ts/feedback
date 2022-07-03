@@ -1,33 +1,35 @@
 <script setup>
 import AuthContainer from '@/components/AuthContainer.vue'
-import router from '@/router'
+import EnterNameView from '@/views/EnterNameView.vue'
 import { useAuth } from '@/lib/useAuth'
 
-const { handleSignInWithGoogle } = useAuth()
-
-const handleAnonymousSignIn = () => {
-  router.push('/enter-username')
-}
+const { user, username, handlesignInAnonymously, handleSignInWithGoogle } = useAuth()
 </script>
 
 <template>
-  <AuthContainer :title="`Welcome to Vue Feedback!`">
-    <button
-      class="bg-transparent py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-500 text-indigo-500 hover:text-white transition-all relative h-11"
-      @click="handleSignInWithGoogle('/')"
-    >
-      <font-awesome-icon icon="fa-brands fa-google" class="absolute left-2 top-2.5 w-5 h-5" />
-      <span class="font-semibold">Continue with Google</span>
-    </button>
-    <button
-      class="bg-transparent font-semibold py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-500 text-indigo-500 hover:text-white transition-all h-11 mt-4"
-      @click="handleAnonymousSignIn"
-    >
-      <span>Continue Anonymously</span>
-    </button>
-    <router-link to="/" class="mt-8 text-sm text-indigo-500 hover:text-indigo-500/80 transition">
-      <font-awesome-icon icon="fa-solid fa-arrow-left" class="mr-2" />
-      <span>Back to the Home page</span>
-    </router-link>
-  </AuthContainer>
+  <!-- <component :is="user ? (!username ? 'EnterNameView' : null) : 'default'"></component> -->
+
+  <template v-if="user && !username"><EnterNameView /></template>
+
+  <template v-if="!user">
+    <AuthContainer :title="`Welcome to Vue Feedback!`">
+      <button
+        class="bg-transparent py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-500 text-indigo-500 hover:text-white transition-all relative h-11"
+        @click="handleSignInWithGoogle('/')"
+      >
+        <font-awesome-icon icon="fa-brands fa-google" class="absolute left-2 top-2.5 w-5 h-5" />
+        <span class="font-semibold">Continue with Google</span>
+      </button>
+      <button
+        class="bg-transparent font-semibold py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-500 text-indigo-500 hover:text-white transition-all h-11 mt-4"
+        @click="handlesignInAnonymously"
+      >
+        <span>Continue Anonymously</span>
+      </button>
+      <router-link to="/" class="mt-8 text-sm text-indigo-500 hover:text-indigo-500/80 transition">
+        <font-awesome-icon icon="fa-solid fa-arrow-left" class="mr-2" />
+        <span>Back to the Home page</span>
+      </router-link>
+    </AuthContainer>
+  </template>
 </template>
