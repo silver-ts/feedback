@@ -1,21 +1,23 @@
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, watch } from 'vue'
 import { onAuthStateChanged, signInWithPopup, signInAnonymously, signOut } from '@firebase/auth'
-// import { doc, onSnapshot } from 'firebase/firestore'
-// import { db } from '@/lib/firebase'
-import { createUser } from '@/lib/db'
+import { doc, onSnapshot } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
 
 import router from '@/router'
+import { createUser, getUserName } from '@/lib/db'
 import { auth, providers } from '@/lib/firebase.js'
 
 export const useAuth = () => {
   const user = ref(null)
   const username = ref(null)
-  const loading = ref(false)
+  const loading = ref(true)
 
   const handleUser = async (userRaw) => {
     if (userRaw) {
-      user.value = formatUser(userRaw, username.value)
+      user.value = formatUser(userRaw)
+
       await createUser(user.value)
+      username.value = await getUserName(user.value.uid)
     } else {
       user.value = null
     }
@@ -32,42 +34,38 @@ export const useAuth = () => {
     onCleanup(unsubscribe)
   })
 
-  // watchEffect((onCleanup) => {
-  //   let unsubscribe
+  watch(user, (user) => {
+    if (user && !username.value) {
+      const userRef = doc(db, 'users', user.uid)
 
-  //   if (user.value) {
-  //     const userRef = doc(db, 'users', user.value.uid)
-  //     unsubscribe = onSnapshot(userRef, (doc) => {
-  //       username.value = doc.data()?.username
-  //       console.log('[onSnapshot]', doc.data())
-  //     })
-  //   } else {
-  //     username.value = null
-  //   }
+      onSnapshot(userRef, (userSnap) => {
+        username.value = userSnap.data()?.username
+        console.log('[onUserNameChanged]')
+      })
+    } else {
+      username.value = null
+    }
+  })
 
-  //   // onCleanup(unsubscribe)
-  // })
-
-  const handleSignInWithGoogle = async (redirect) => {
-    loading.value = true
-
+  const handleSignInWithGoogle = async () => {
     try {
       await signInWithPopup(auth, providers.googleProvider)
     } catch (error) {
       handleUser(null)
     }
-
-    if (redirect) {
-      await router.push(redirect)
-    }
   }
 
   const handlesignInAnonymously = async () => {
-    await signInAnonymously(auth)
+    try {
+      await signInAnonymously(auth)
+    } catch (error) {
+      handleUser(null)
+    }
   }
 
   const handleSignOut = async () => {
     await signOut(auth)
+    router.push('/')
   }
 
   return {
@@ -80,11 +78,10 @@ export const useAuth = () => {
   }
 }
 
-const formatUser = (user, username) => {
+const formatUser = (user) => {
   return {
     uid: user.uid,
     displayName: user.displayName,
     photoURL: user.photoURL,
-    username,
   }
 }

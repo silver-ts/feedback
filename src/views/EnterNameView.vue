@@ -1,8 +1,13 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, inject } from 'vue'
+import { useRouter } from 'vue-router'
 import debounce from 'lodash.debounce'
+
 import AuthContainer from '@/components/AuthContainer.vue'
-import { checkUserName } from '@/lib/db'
+import { checkUserName, updateUsername } from '@/lib/db'
+
+const { user } = inject('auth')
+const router = useRouter()
 
 const usernameText = ref('')
 const usernameIsValid = ref(false)
@@ -10,9 +15,10 @@ const usernameIsUnique = ref(false)
 const loading = ref(false)
 
 const handleFormSubmit = async () => {
-  // 1. Create create refs for user & username documents
-  // 2. Update both documents together
-  console.log('[handleFormSubmit]')
+  if (usernameIsValid.value && usernameIsUnique.value) {
+    await updateUsername(user.value.uid, usernameText.value)
+    await router.push('/')
+  }
 }
 
 const handleInputChange = (e) => {
@@ -42,9 +48,7 @@ const handleInputChange = (e) => {
   }
 }
 
-const check = debounce(async (username) => {
-  console.log('[debounce]')
-
+const handleUsernameCheck = debounce(async (username) => {
   if (usernameIsValid.value) {
     const userNameRef = await checkUserName(username)
     usernameIsUnique.value = !userNameRef
@@ -52,13 +56,12 @@ const check = debounce(async (username) => {
   }
 }, 1000)
 
-watch(usernameText, check, { flush: 'post' })
+watch(usernameText, handleUsernameCheck, { flush: 'post' })
 </script>
 
 <template>
   <AuthContainer :title="`Choose your Username`">
     <form @submit.prevent="handleFormSubmit">
-      <!-- v-model.trim="usernameText" -->
       <input
         type="text"
         :value="usernameText"

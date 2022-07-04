@@ -1,8 +1,9 @@
 <script setup>
 import { inject } from 'vue'
 import NavMenu from '@/components/NavMenu.vue'
+import EmptyNavBar from '@/components/EmptyNavBar.vue'
 
-const { user, username, loading } = inject('auth')
+const { username, loading } = inject('auth')
 </script>
 
 <template>
@@ -14,6 +15,10 @@ const { user, username, loading } = inject('auth')
     >
       <router-link to="/" class="text-xl mx-2 sm:mx-4 font-light">✨ Vue Feedback</router-link>
       <ul class="flex items-center">
+        <li v-if="loading">
+          <EmptyNavBar />
+        </li>
+
         <template v-if="username && !loading">
           <li>
             <router-link
@@ -27,7 +32,7 @@ const { user, username, loading } = inject('auth')
             <NavMenu />
           </li>
         </template>
-        <template v-else>
+        <template v-if="!username && !loading">
           <li>
             <router-link
               to="/login"

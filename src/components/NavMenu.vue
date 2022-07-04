@@ -2,15 +2,16 @@
 import { inject } from 'vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import UserAvatar from '@/components/UserAvatar.vue'
+import globals from '@/globals'
 
-const { user, handleSignOut } = inject('auth')
+const { user, username, handleSignOut } = inject('auth')
 </script>
 
 <template>
   <Menu as="div" class="relative mx-2 sm:mx-4 flex items-center justify-center">
     <MenuButton v-slot="{ open }">
       <UserAvatar
-        :photoURL="user.photoURL"
+        :photoURL="user?.photoURL"
         class="ring-4 ring-white hover:ring-indigo-200/50 focus-visible:ring-indigo-200/50 transition"
         :class="{ 'ring-indigo-200/50': open }"
       />
@@ -24,8 +25,10 @@ const { user, handleSignOut } = inject('auth')
         >
           <div>
             <router-link to="/username">
-              <span class="font-semibold block">{{ user.displayName }}</span>
-              <span class="text-sm block">@jaiden</span>
+              <span class="font-semibold block">
+                {{ user?.displayName || globals.defaultUserName }}
+              </span>
+              <span class="text-sm block">{{ `@${username}` }}</span>
             </router-link>
           </div>
         </MenuItem>
