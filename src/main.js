@@ -7,7 +7,7 @@ import { faHeart } from '@fortawesome/free-regular-svg-icons'
 
 import App from './App.vue'
 import router from './router'
-import { useAuth } from '@/lib/useAuth.js'
+import { useAuth } from '@/lib/useAuth'
 
 const app = createApp(App)
 

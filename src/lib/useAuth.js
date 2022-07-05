@@ -1,11 +1,10 @@
 import { ref, watchEffect, watch } from 'vue'
 import { onAuthStateChanged, signInWithPopup, signInAnonymously, signOut } from '@firebase/auth'
 import { doc, onSnapshot } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
 
 import router from '@/router'
-import { createUser, getUserName } from '@/lib/db'
-import { auth, providers } from '@/lib/firebase.js'
+import { createUser, getUsername } from '@/lib/db'
+import { auth, db, providers } from '@/lib/firebase'
 
 export const useAuth = () => {
   const user = ref(null)
@@ -17,7 +16,7 @@ export const useAuth = () => {
       user.value = formatUser(userRaw)
 
       await createUser(user.value)
-      username.value = await getUserName(user.value.uid)
+      username.value = await getUsername(user.value.uid)
     } else {
       user.value = null
     }

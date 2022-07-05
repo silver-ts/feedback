@@ -14,7 +14,7 @@ export const createUser = async (user) => {
  * @param {string} username
  * @returns {boolean}
  */
-export const checkUserName = async (username) => {
+export const checkUsername = async (username) => {
   const userNameRef = doc(db, 'usernames', username)
   const userNameSnap = await getDoc(userNameRef)
 
@@ -42,7 +42,7 @@ export const updateUsername = async (uid, username) => {
  * @param {string} uid
  * @returns {string | null} - username
  */
-export const getUserName = async (uid) => {
+export const getUsername = async (uid) => {
   const userRef = doc(db, 'users', uid)
   const userSnap = await getDoc(userRef)
 

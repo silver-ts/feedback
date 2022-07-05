@@ -9,9 +9,9 @@ import { useAuth } from '@/lib/useAuth'
 const { user, username, loading, handlesignInAnonymously, handleSignInWithGoogle } = useAuth()
 const router = useRouter()
 
-const handleRedirect = (username) => {
+const handleRedirect = async (username) => {
   if (username) {
-    router.push('/')
+    await router.push('/')
   }
 }
 
@@ -19,8 +19,8 @@ watch(username, handleRedirect)
 </script>
 
 <template>
-  <template v-if="user && !username && !loading"><EnterNameView /></template>
-  <template v-if="!user && !loading">
+  <template v-if="loading">Loading</template>
+  <template v-else-if="!user">
     <AuthContainer :title="`Welcome to Vue Feedback!`">
       <button
         class="bg-transparent py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-500 text-indigo-500 hover:text-white transition-all relative h-11"
@@ -40,5 +40,8 @@ watch(username, handleRedirect)
         <span>Back to the Home page</span>
       </router-link>
     </AuthContainer>
+  </template>
+  <template v-else-if="user && !username">
+    <EnterNameView />
   </template>
 </template>
