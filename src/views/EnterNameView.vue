@@ -4,10 +4,10 @@ import { useRouter } from 'vue-router'
 import debounce from 'lodash.debounce'
 
 import AuthContainer from '@/components/AuthContainer.vue'
-import { checkUsername, updateUsername } from '@/lib/db'
+import { checkUsername } from '@/lib/db'
 import globals from '@/globals'
 
-const { user } = inject('auth')
+const { handleUsernameUpdate } = inject('auth')
 const router = useRouter()
 
 const usernameText = ref('')
@@ -18,7 +18,7 @@ const message = ref(null)
 
 const handleFormSubmit = async () => {
   if (usernameIsValid.value && usernameIsUnique.value) {
-    await updateUsername(user.value.uid, usernameText.value)
+    await handleUsernameUpdate(usernameText.value)
     await router.push('/')
   }
 }
@@ -26,7 +26,6 @@ const handleFormSubmit = async () => {
 const handleInputChange = (e) => {
   // 1. Format username value
   const inputValue = e.target.value.toLowerCase()
-
   usernameText.value = inputValue
   message.value = null
 

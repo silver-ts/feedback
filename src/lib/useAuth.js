@@ -1,10 +1,9 @@
-import { ref, watchEffect, watch } from 'vue'
-import { onAuthStateChanged, signInWithPopup, signInAnonymously, signOut } from '@firebase/auth'
-import { doc, onSnapshot } from 'firebase/firestore'
+import { ref, watchEffect } from 'vue'
+import { onAuthStateChanged, signInWithPopup, signInAnonymously, signOut } from 'firebase/auth'
 
 import router from '@/router'
-import { createUser, getUsername } from '@/lib/db'
-import { auth, db, providers } from '@/lib/firebase'
+import { createUser, getUsername, updateUsername } from '@/lib/db'
+import { auth, providers } from '@/lib/firebase'
 
 export const useAuth = () => {
   const user = ref(null)
@@ -13,38 +12,36 @@ export const useAuth = () => {
 
   const handleUser = async (userRaw) => {
     if (userRaw) {
-      user.value = formatUser(userRaw)
+      const userData = formatUser(userRaw)
 
-      await createUser(user.value)
-      username.value = await getUsername(user.value.uid)
+      // 1. Update user data in db with user
+      await createUser(userData)
+
+      // 2. `userRaw` doesn't provide a custom username, so we get it from the db
+      username.value = await getUsername(userData.uid)
+      user.value = userData
     } else {
       user.value = null
+      username.value = null
     }
 
     loading.value = false
   }
 
   watchEffect((onCleanup) => {
-    const unsubscribe = onAuthStateChanged(auth, (userRaw) => {
-      handleUser(userRaw)
+    // The `onAuthStateChanged` observer is only triggered on sign-in or sign-out.
+    const unsubscribe = onAuthStateChanged(auth, async (userRaw) => {
       console.log('[onAuthStateChanged]')
+      await handleUser(userRaw)
     })
 
     onCleanup(unsubscribe)
   })
 
-  watch(user, (user) => {
-    if (user && !username.value) {
-      const userRef = doc(db, 'users', user.uid)
-
-      onSnapshot(userRef, (userSnap) => {
-        username.value = userSnap.data()?.username
-        console.log('[onUserNameChanged]')
-      })
-    } else {
-      username.value = null
-    }
-  })
+  const handleUsernameUpdate = async (newUsername) => {
+    await updateUsername(user.value.uid, newUsername)
+    username.value = newUsername
+  }
 
   const handleSignInWithGoogle = async () => {
     try {
@@ -71,6 +68,7 @@ export const useAuth = () => {
     user,
     username,
     loading,
+    handleUsernameUpdate,
     handleSignInWithGoogle,
     handlesignInAnonymously,
     handleSignOut,

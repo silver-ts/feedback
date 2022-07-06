@@ -9,9 +9,9 @@ import { useAuth } from '@/lib/useAuth'
 const { user, username, loading, handlesignInAnonymously, handleSignInWithGoogle } = useAuth()
 const router = useRouter()
 
-const handleRedirect = async (username) => {
+const handleRedirect = (username) => {
   if (username) {
-    await router.push('/')
+    router.push('/')
   }
 }
 
