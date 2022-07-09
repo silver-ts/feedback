@@ -34,6 +34,7 @@ const router = createRouter({
       path: '/:username',
       name: 'user-profile',
       component: UserProfileView,
+      props: true,
     },
     {
       path: '/new',
