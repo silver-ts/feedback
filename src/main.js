@@ -8,12 +8,17 @@ import { faHeart } from '@fortawesome/free-regular-svg-icons'
 import App from './App.vue'
 import router from './router'
 import { useAuth } from '@/lib/useAuth'
+import { usePosts } from '@/lib/usePosts'
 
 const app = createApp(App)
 
 // Global auth provider
 const auth = useAuth()
 app.provide('auth', auth)
+
+// Global auth provider
+const posts = usePosts()
+app.provide('posts', posts)
 
 // Fontawesome icons
 library.add(faGithub, faGoogle, faArrowLeft, faHeart, faUser)

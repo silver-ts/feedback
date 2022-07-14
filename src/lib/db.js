@@ -9,8 +9,13 @@ import {
   limit,
   orderBy,
   getDocs,
+  collectionGroup,
+  startAfter,
+  Timestamp,
 } from 'firebase/firestore'
+
 import { db } from '@/lib/firebase'
+import globals from '@/globals'
 
 /**
  * Add user to firestore database
@@ -105,4 +110,40 @@ export const getUserPosts = async (username) => {
   }
 
   return { author, posts }
+}
+
+/**
+ * Get first subset of recent posts
+ */
+export const getPostsDocs = async () => {
+  console.log('[getPostsDocs]')
+
+  const firstPostsRef = query(
+    collectionGroup(db, 'posts'),
+    where('published', '==', true),
+    orderBy('createdAt', 'desc'),
+    limit(globals.postsLimit),
+  )
+
+  const postsSnap = await getDocs(firstPostsRef)
+  return postsSnap
+}
+
+/**
+ * Get next subset of recent posts
+ * @param {number} cursor - milliseconds
+ */
+export const getNextPostsDocs = async (cursor) => {
+  console.log('[getNextPostsDocs]')
+
+  const nextPostsRef = query(
+    collectionGroup(db, 'posts'),
+    where('published', '==', true),
+    orderBy('createdAt', 'desc'),
+    startAfter(Timestamp.fromMillis(cursor)),
+    limit(globals.postsLimit),
+  )
+
+  const postsSnap = await getDocs(nextPostsRef)
+  return postsSnap
 }
