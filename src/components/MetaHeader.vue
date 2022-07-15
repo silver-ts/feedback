@@ -4,6 +4,7 @@ import UserAvatar from '@/components/UserAvatar.vue'
 defineProps({
   photoURL: String,
   author: String,
+  username: String,
   createdAt: String,
 })
 </script>
@@ -13,7 +14,7 @@ defineProps({
     <UserAvatar :photoURL="photoURL" class="mr-2" />
     <div>
       <router-link
-        to="/username1"
+        :to="`/${username}`"
         class="p-1 text-sm sm:text-base font-semibold rounded hover:bg-gray-200/50 transition"
       >
         {{ author }}

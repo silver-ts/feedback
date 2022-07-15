@@ -50,7 +50,7 @@ onMounted(async () => {
       <template v-if="posts.length !== 0">
         <section class="mt-4 sm:mt-9">
           <template v-for="post in posts" :key="post.slug">
-            <PostItem :author="post.username" :postId="post.slug" />
+            <PostItem :author="post.username" :postId="post.slug" :post="post" />
           </template>
         </section>
       </template>
