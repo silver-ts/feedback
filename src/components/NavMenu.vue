@@ -24,7 +24,7 @@ const { user, username, handleSignOut } = inject('auth')
           class="px-4 py-2 rounded-md hover:text-indigo-500 hover:bg-indigo-200/50 text-left w-full transition cursor-pointer"
         >
           <div>
-            <router-link to="/username">
+            <router-link :to="`/${username}`">
               <span class="font-semibold block">
                 {{ user?.displayName || globals.defaultUserName }}
               </span>

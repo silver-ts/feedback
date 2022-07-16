@@ -3,6 +3,7 @@ import { watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import AuthContainer from '@/components/AuthContainer.vue'
+import LoaderSpinner from '@/components/LoaderSpinner.vue'
 import EnterNameView from '@/views/EnterNameView.vue'
 import { useAuth } from '@/lib/useAuth'
 
@@ -19,7 +20,12 @@ watch(username, handleRedirect)
 </script>
 
 <template>
-  <template v-if="loading">Loading</template>
+  <template v-if="loading">
+    <main>
+      <LoaderSpinner />
+    </main>
+  </template>
+
   <template v-else-if="!user">
     <AuthContainer :title="`Welcome to Vue Feedback!`">
       <button
