@@ -1,6 +1,7 @@
 <script setup>
 import { inject } from 'vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
+
 import UserAvatar from '@/components/UserAvatar.vue'
 import globals from '@/globals'
 

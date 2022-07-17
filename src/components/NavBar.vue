@@ -1,5 +1,6 @@
 <script setup>
 import { inject } from 'vue'
+
 import NavMenu from '@/components/NavMenu.vue'
 import EmptyNavBar from '@/components/EmptyNavBar.vue'
 

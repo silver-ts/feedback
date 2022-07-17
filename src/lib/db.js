@@ -70,36 +70,23 @@ export const getUsername = async (uid) => {
  * @param {string} username
  */
 export const getUserDocByUsername = async (username) => {
-  try {
-    const userRef = collection(db, 'users')
-    const userQuery = query(userRef, where('username', '==', username), limit(1))
-    const userSnap = await getDocs(userQuery)
+  const userRef = collection(db, 'users')
+  const userQuery = query(userRef, where('username', '==', username), limit(1))
+  const userSnap = await getDocs(userQuery)
 
-    return userSnap.docs[0]
-  } catch (error) {
-    return null
-  }
+  return userSnap.docs.length !== 0 ? userSnap.docs[0].data() : null
 }
 
 /**
  * Get user public posts
- * @param {string} username
+ * @param {string} uid user id
  */
-export const getUserPosts = async (username) => {
-  const userDoc = await getUserDocByUsername(username)
-
-  if (!userDoc) {
-    return { author: null, posts: [] }
-  }
-
-  const author = userDoc.data()
-  const posts = []
-
-  if (author) {
-    console.log('[getUserPosts]')
+export const getUserPosts = async (uid) => {
+  if (uid) {
+    const posts = []
 
     const userPostsRef = query(
-      collection(db, `users/${author.uid}/posts`),
+      collection(db, `users/${uid}/posts`),
       where('published', '==', true),
       orderBy('createdAt', 'desc'),
       limit(5),
@@ -107,17 +94,15 @@ export const getUserPosts = async (username) => {
 
     const userPostsSnap = await getDocs(userPostsRef)
     userPostsSnap.forEach((doc) => posts.push(doc.data()))
-  }
 
-  return { author, posts }
+    return posts
+  }
 }
 
 /**
  * Get first subset of recent posts
  */
 export const getPostsDocs = async () => {
-  console.log('[getPostsDocs]')
-
   const firstPostsRef = query(
     collectionGroup(db, 'posts'),
     where('published', '==', true),
@@ -134,8 +119,6 @@ export const getPostsDocs = async () => {
  * @param {number} cursor - milliseconds
  */
 export const getNextPostsDocs = async (cursor) => {
-  console.log('[getNextPostsDocs]')
-
   const nextPostsRef = query(
     collectionGroup(db, 'posts'),
     where('published', '==', true),

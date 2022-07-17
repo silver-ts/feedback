@@ -8,8 +8,8 @@ const { posts, loading, getMorePosts, isPostsEnd } = inject('posts')
 </script>
 
 <template>
-  <main class="relative flex flex-col sm:flex-row">
-    <section class="flex-1">
+  <main class="relative flex flex-col sm:flex-row justify-center">
+    <section class="flex-1 max-w-4xl">
       <template v-if="posts.length !== 0">
         <template v-for="post in posts" :key="post.slug">
           <PostItem :author="post.username" :postId="post.slug" :post="post" />
