@@ -2,6 +2,7 @@
 import { ref, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import debounce from 'lodash.debounce'
+import kebabCase from 'lodash.kebabcase'
 
 import AuthContainer from '@/components/AuthContainer.vue'
 import { checkUsername } from '@/lib/db'
@@ -26,7 +27,7 @@ const handleFormSubmit = async () => {
 const handleInputChange = (e) => {
   // 1. Format username value
   const inputValue = e.target.value.toLowerCase()
-  usernameText.value = inputValue
+  usernameText.value = kebabCase(inputValue)
   message.value = null
 
   // 2. Validate input
@@ -45,6 +46,7 @@ const handleInputChange = (e) => {
     usernameIsUnique.value = false
     loading.value = false
   } else {
+    message.value = 'Validating your input ...'
     usernameIsValid.value = true
     usernameIsUnique.value = false
     loading.value = true
@@ -56,7 +58,7 @@ const handleUsernameCheck = debounce(async (username) => {
     const userNameRef = await checkUsername(username)
 
     usernameIsUnique.value = !userNameRef
-    message.value = userNameRef ? globals.loginErrorMessage : null
+    message.value = userNameRef ? globals.loginErrorMessage : 'Username is valid.'
     loading.value = false
   }
 }, 1000)
@@ -75,7 +77,7 @@ watch(usernameText, handleUsernameCheck, { flush: 'post' })
         placeholder="your name is .."
         class="block w-full bg-white border border-gray-400/50 rounded-md px-4 py-2 hover:border-indigo-500 focus:border-indigo-500 outline-none transition"
       />
-      <div class="mt-2 h-5 text-sm text-red-400 font-semibold">
+      <div class="mt-2 h-5 text-sm font-semibold">
         {{ message }}
       </div>
       <button
