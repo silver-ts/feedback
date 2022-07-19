@@ -2,11 +2,9 @@
 import { ref, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import debounce from 'lodash.debounce'
-import kebabCase from 'lodash.kebabcase'
 
 import AuthContainer from '@/components/AuthContainer.vue'
 import { checkUsername } from '@/lib/db'
-import globals from '@/globals'
 
 const { handleUsernameUpdate } = inject('auth')
 const router = useRouter()
@@ -20,18 +18,19 @@ const message = ref(null)
 const handleFormSubmit = async () => {
   if (usernameIsValid.value && usernameIsUnique.value) {
     await handleUsernameUpdate(usernameText.value)
-    await router.push('/')
+    router.push('/')
   }
 }
 
 const handleInputChange = (e) => {
   // 1. Format username value
   const inputValue = e.target.value.toLowerCase()
-  usernameText.value = kebabCase(inputValue)
+  usernameText.value = inputValue
   message.value = null
 
   // 2. Validate input
   if (inputValue.length < 3) {
+    message.value = '❌ Username should be at least 3 characters long.'
     usernameIsValid.value = false
     usernameIsUnique.value = false
     loading.value = false
@@ -42,6 +41,7 @@ const handleInputChange = (e) => {
   const inputIsValid = /^([A-Za-z0-9]{3,15})*$/.test(inputValue)
 
   if (!inputIsValid) {
+    message.value = '❌ Username should contain only letters & numbers.'
     usernameIsValid.value = false
     usernameIsUnique.value = false
     loading.value = false
@@ -58,23 +58,23 @@ const handleUsernameCheck = debounce(async (username) => {
     const userNameRef = await checkUsername(username)
 
     usernameIsUnique.value = !userNameRef
-    message.value = userNameRef ? globals.loginErrorMessage : 'Username is valid.'
+    message.value = userNameRef ? '❌ That username is already taken.' : '✅ Username is valid.'
     loading.value = false
   }
 }, 1000)
 
-watch(usernameText, handleUsernameCheck, { flush: 'post' })
+watch(usernameText, handleUsernameCheck)
 </script>
 
 <template>
-  <AuthContainer :title="`Choose your Username`">
+  <AuthContainer :title="'Choose your Username'">
     <form @submit.prevent="handleFormSubmit">
       <input
         type="text"
+        maxlength="15"
+        placeholder="your name ..."
         :value="usernameText"
         @input="handleInputChange"
-        maxlength="15"
-        placeholder="your name is .."
         class="block w-full bg-white border border-gray-400/50 rounded-md px-4 py-2 hover:border-indigo-500 focus:border-indigo-500 outline-none transition"
       />
       <div class="mt-2 h-5 text-sm font-semibold">

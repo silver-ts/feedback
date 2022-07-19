@@ -44,6 +44,8 @@ export const useAuth = () => {
   }
 
   const handleSignInWithGoogle = async () => {
+    loading.value = true
+
     try {
       await signInWithPopup(auth, providers.googleProvider)
     } catch (error) {
@@ -52,6 +54,8 @@ export const useAuth = () => {
   }
 
   const handlesignInAnonymously = async () => {
+    loading.value = true
+
     try {
       await signInAnonymously(auth)
     } catch (error) {

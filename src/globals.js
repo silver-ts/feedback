@@ -6,5 +6,4 @@ export default {
 
   // User settings
   defaultUserName: 'Anonymous user',
-  loginErrorMessage: 'That username is already taken.',
 }

@@ -19,7 +19,9 @@ defineProps({
       >
         {{ author }}
       </router-link>
-      <div class="text-xs ml-1">{{ createdAt }}</div>
+      <div class="text-xs ml-1">
+        {{ createdAt }}
+      </div>
     </div>
   </div>
 </template>

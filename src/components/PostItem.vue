@@ -24,6 +24,7 @@ const readingTime = computed(() => {
       <MetaHeader
         :username="post.username"
         :author="post.author"
+        :photoURL="post.photoURL"
         :createdAt="`${format(
           new Date(post.createdAt.seconds * 1000),
           'PP',
