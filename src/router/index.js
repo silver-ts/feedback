@@ -31,6 +31,7 @@ const router = createRouter({
       path: '/:username/:postId',
       name: 'user-post',
       component: PostView,
+      props: true,
     },
     {
       path: '/:username',

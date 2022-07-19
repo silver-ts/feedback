@@ -100,6 +100,20 @@ export const getUserPosts = async (uid) => {
 }
 
 /**
+ * Get user post from url
+ * @param {string} uid user id
+ * @param {string} slug post url slug
+ */
+export const getUserPostContent = async (uid, slug) => {
+  if (uid) {
+    const postRef = doc(db, `users/${uid}/posts`, slug)
+    const postSnap = await getDoc(postRef)
+
+    return postSnap.data() || null
+  }
+}
+
+/**
  * Get first subset of recent posts
  */
 export const getPostsDocs = async () => {

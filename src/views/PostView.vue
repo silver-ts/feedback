@@ -1,24 +1,65 @@
 <script setup>
+import { defineProps, watchEffect, ref } from 'vue'
+import { format } from 'date-fns'
+
 import MetaHeader from '@/components/MetaHeader.vue'
+import LoaderSpinner from '@/components/LoaderSpinner.vue'
+import { getUserPostContent, getUserDocByUsername } from '@/lib/db'
+
+const props = defineProps({
+  username: String,
+  postId: String,
+})
+
+const post = ref(null)
+const loading = ref(true)
+
+watchEffect(async () => {
+  loading.value = true
+  const userDoc = await getUserDocByUsername(props.username)
+
+  if (userDoc) {
+    const postDoc = await getUserPostContent(userDoc.uid, props.postId)
+
+    post.value = postDoc
+    loading.value = false
+  }
+
+  loading.value = false
+})
 </script>
 
 <template>
+  <main v-if="loading">
+    <LoaderSpinner />
+  </main>
+
   <main class="flex relative flex-col sm:flex-row">
     <section
+      v-if="post && !loading"
       class="flex-1 mr-0 sm:mr-4 mb-4 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:px-16 sm:py-8"
     >
-      <MetaHeader :author="`Jainden`" :createdAt="`Posted on Jun 25`" />
+      <MetaHeader
+        :author="post.author"
+        :createdAt="format(new Date(post.createdAt.seconds * 1000), 'PP')"
+        :username="post.username"
+      />
       <article class="mt-6 sm:mt-8">
-        <h3 class="font-semibold text-xl sm:text-2xl">Post Title</h3>
-        <p>Post content ...</p>
+        <h3 class="font-semibold text-xl sm:text-2xl">{{ post.title }}</h3>
+        <p>{{ post.content }}</p>
       </article>
     </section>
     <aside
+      v-if="post && !loading"
       class="sticky max-w-xs w-full h-80 sm:top-[length:var(--aside-top)] right-0 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:p-5"
     >
       <div class="flex items-center justify-center">
         <font-awesome-icon icon="fa-regular fa-heart" class="mr-2" />
-        <span class="text-sm sm:text-base">3 Reactions</span>
+        <span class="text-sm sm:text-base">
+          {{
+            post.heartCount === 1 ? `${post.heartCount} Reaction` : `${post.heartCount} Reactions`
+          }}
+        </span>
       </div>
     </aside>
   </main>
