@@ -38,6 +38,11 @@ const { user, username, handleSignOut } = inject('auth')
         <MenuItem
           class="px-4 py-2 rounded-md hover:text-indigo-500 hover:bg-indigo-200/50 text-left w-full transition cursor-pointer"
         >
+          <router-link to="/admin" class="block">Dashboard</router-link>
+        </MenuItem>
+        <MenuItem
+          class="px-4 py-2 rounded-md hover:text-indigo-500 hover:bg-indigo-200/50 text-left w-full transition cursor-pointer"
+        >
           <router-link to="/new" class="block">Create Post</router-link>
         </MenuItem>
       </div>

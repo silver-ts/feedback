@@ -144,3 +144,8 @@ export const getNextPostsDocs = async (cursor) => {
   const postsSnap = await getDocs(nextPostsRef)
   return postsSnap
 }
+
+export const createNewPost = async (data) => {
+  const docRef = doc(db, `users/${data.uid}/posts`, data.slug)
+  await setDoc(docRef, data)
+}
