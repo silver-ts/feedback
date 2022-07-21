@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watchEffect } from 'vue'
 
-import PostItem from '@/components/PostItem.vue'
+import PostLink from '@/components/PostLink.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import EmptyUserProfile from '@/components/EmptyUserProfile.vue'
 import NotFound from '@/components/NotFound.vue'
@@ -57,7 +57,7 @@ watchEffect(async () => {
       class="mt-4 sm:mt-9 max-w-4xl flex flex-col justify-center mx-auto"
     >
       <template v-for="post in posts" :key="post.slug">
-        <PostItem :author="post.username" :postId="post.slug" :post="post" />
+        <PostLink :author="post.username" :postId="post.slug" :post="post" />
       </template>
     </section>
     <div v-else class="mt-4 sm:mt-9 text-center text-base sm:text-xl">

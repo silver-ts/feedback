@@ -1,7 +1,7 @@
 <script setup>
 import { inject } from 'vue'
 
-import PostItem from '@/components/PostItem.vue'
+import PostLink from '@/components/PostLink.vue'
 import LoaderSpinner from '@/components/LoaderSpinner.vue'
 
 const { posts, loading, getMorePosts, isPostsEnd } = inject('posts')
@@ -12,7 +12,7 @@ const { posts, loading, getMorePosts, isPostsEnd } = inject('posts')
     <section class="flex-1 max-w-4xl">
       <template v-if="posts.length !== 0">
         <template v-for="post in posts" :key="post.slug">
-          <PostItem :author="post.username" :postId="post.slug" :post="post" />
+          <PostLink :author="post.username" :postId="post.slug" :post="post" />
         </template>
       </template>
 

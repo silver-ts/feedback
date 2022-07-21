@@ -8,6 +8,7 @@ export const usePosts = () => {
   const loading = ref(true)
 
   const getPosts = async () => {
+    console.log('[getPosts]')
     try {
       const postsSnap = await getPostsDocs()
 
@@ -34,7 +35,6 @@ export const usePosts = () => {
       const newPostsSnap = await getNextPostsDocs(cursor)
       const newPosts = newPostsSnap.docs.map((doc) => doc.data())
 
-      console.log(newPosts)
       posts.value = posts.value.concat(newPosts)
       loading.value = false
 
