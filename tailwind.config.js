@@ -4,5 +4,8 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    // Add typographic defaults to vanilla HTML rendered from Markdown
+    require('@tailwindcss/typography'),
+  ],
 }
