@@ -100,6 +100,27 @@ export const getUserPosts = async (uid) => {
 }
 
 /**
+ * Get all user posts (published & drafts)
+ * @param {string} uid user id
+ */
+export const getAllUserPosts = async (uid) => {
+  if (uid) {
+    const posts = []
+
+    const userPostsRef = query(
+      collection(db, `users/${uid}/posts`),
+      orderBy('createdAt', 'desc'),
+      limit(5),
+    )
+
+    const userPostsSnap = await getDocs(userPostsRef)
+    userPostsSnap.forEach((doc) => posts.push(doc.data()))
+
+    return posts
+  }
+}
+
+/**
  * Get user post from url
  * @param {string} uid user id
  * @param {string} slug post url slug
