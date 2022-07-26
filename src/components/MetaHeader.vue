@@ -17,7 +17,7 @@ defineProps({
         :to="`/${username}`"
         class="p-1 text-sm sm:text-base font-semibold rounded hover:bg-gray-200/50 transition"
       >
-        {{ author }}
+        {{ author || `@${username}` }}
       </router-link>
       <div class="text-xs ml-1">
         {{ createdAt }}

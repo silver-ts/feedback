@@ -1,21 +1,28 @@
 <script setup>
 import { computed, ref, inject } from 'vue'
+import { useRouter } from 'vue-router'
+import { serverTimestamp } from 'firebase/firestore'
 import { Switch } from '@headlessui/vue'
 import kebabCase from 'lodash.kebabcase'
-
-import { serverTimestamp } from 'firebase/firestore'
-import { createNewPost } from '@/lib/db'
+import { marked } from 'marked'
 
 import AuthCheck from '@/components/AuthCheck.vue'
+import { createNewPost } from '@/lib/db'
 
+const isPreview = ref(false)
 const isPublished = ref(false)
 const titleInput = ref('')
 const contentInput = ref('')
 
 const { user, username } = inject('auth')
+const router = useRouter()
 
 const slug = computed(() => {
   return encodeURI(kebabCase(titleInput.value))
+})
+
+const markdownToHTML = computed(() => {
+  return marked(contentInput.value)
 })
 
 const handleCreateNewPost = async () => {
@@ -37,6 +44,12 @@ const handleCreateNewPost = async () => {
 
   console.log(data)
   await createNewPost(data)
+
+  router.push('/')
+}
+
+const handlePreview = () => {
+  isPreview.value = !isPreview.value
 }
 </script>
 
@@ -46,7 +59,8 @@ const handleCreateNewPost = async () => {
       <section
         class="flex-1 mr-0 sm:mr-4 mb-4 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:px-16 sm:py-8"
       >
-        <form class="flex flex-col h-full" @submit.prevent="handleCreateNewPost">
+        <div v-if="isPreview" v-html="markdownToHTML" class="prose w-full"></div>
+        <form v-if="!isPreview" class="flex flex-col h-full" @submit.prevent="handleCreateNewPost">
           <input
             type="text"
             placeholder="Your title ..."
@@ -89,6 +103,7 @@ const handleCreateNewPost = async () => {
       >
         <div class="flex flex-col">
           <button
+            @click="handlePreview"
             class="bg-transparent py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-500 text-indigo-500 hover:text-white transition-all relative h-11"
           >
             Preview
