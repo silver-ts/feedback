@@ -15,9 +15,9 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div v-if="loading" class="w-full flex justify-center">
+  <main v-if="loading" class="flex-1">
     <LoaderSpinner />
-  </div>
+  </main>
 
   <template v-if="!loading && username">
     <slot></slot>

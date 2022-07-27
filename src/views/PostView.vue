@@ -1,12 +1,12 @@
 <script setup>
 import { defineProps, watchEffect, ref, computed } from 'vue'
-import { format } from 'date-fns'
 import { marked } from 'marked'
 
 import MetaHeader from '@/components/MetaHeader.vue'
 import LoaderSpinner from '@/components/LoaderSpinner.vue'
 import NotFound from '@/components/NotFound.vue'
 import { getUserPostContent, getUserDocByUsername } from '@/lib/db'
+import { displayDate } from '@/utils/formatDate'
 
 const props = defineProps({
   username: String,
@@ -26,10 +26,7 @@ watchEffect(async () => {
 
   if (userDoc) {
     const postDoc = await getUserPostContent(userDoc.uid, props.postId)
-    console.log(postDoc)
-
     post.value = postDoc
-    loading.value = false
   }
 
   loading.value = false
@@ -49,13 +46,12 @@ watchEffect(async () => {
     >
       <MetaHeader
         :author="post.author"
-        :createdAt="format(new Date(post.createdAt.seconds * 1000), 'PP')"
+        :createdAt="displayDate(post.createdAt.seconds)"
         :username="post.username"
       />
       <article class="mt-6 sm:mt-8">
-        <h3 class="font-semibold text-xl sm:text-2xl">{{ post.title }}</h3>
-
-        <div v-html="markdownToHTML" class="prose w-full"></div>
+        <h3 class="font-semibold text-2xl sm:text-4xl">{{ post.title }}</h3>
+        <div v-html="markdownToHTML" class="prose w-full max-w-none mt-5 sm:mt-8"></div>
       </article>
     </section>
     <aside

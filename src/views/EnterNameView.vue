@@ -73,6 +73,7 @@ watch(usernameText, handleUsernameCheck)
         type="text"
         maxlength="15"
         placeholder="your name ..."
+        required
         :value="usernameText"
         @input="handleInputChange"
         class="block w-full bg-white border border-gray-400/50 rounded-md px-4 py-2 hover:border-indigo-500 focus:border-indigo-500 outline-none transition"

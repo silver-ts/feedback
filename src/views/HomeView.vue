@@ -12,7 +12,7 @@ const { posts, loading, getMorePosts, isPostsEnd } = inject('posts')
     <section class="flex-1 max-w-4xl">
       <template v-if="posts.length !== 0">
         <template v-for="post in posts" :key="post.slug">
-          <PostLink :author="post.username" :postId="post.slug" :post="post" />
+          <PostLink :post="post" />
         </template>
       </template>
 

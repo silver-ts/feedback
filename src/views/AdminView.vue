@@ -6,10 +6,9 @@ import PostItem from '@/components/PostItem.vue'
 import LoaderSpinner from '@/components/LoaderSpinner.vue'
 import { getAllUserPosts, getUserDocByUsername } from '@/lib/db'
 
-const posts = ref(null)
-const loading = ref(true)
-
 const { username } = inject('auth')
+const posts = ref([])
+const loading = ref(true)
 
 watchEffect(async () => {
   loading.value = true
@@ -17,10 +16,7 @@ watchEffect(async () => {
 
   if (userDoc) {
     const postDoc = await getAllUserPosts(userDoc.uid)
-    console.log(postDoc)
-
     posts.value = postDoc
-    loading.value = false
   }
 
   loading.value = false
@@ -40,10 +36,27 @@ watchEffect(async () => {
         class="w-full bg-white rounded-lg border border-gray-400/50 drop-shadow-sm divide-y divide-gray-300/50"
       >
         <template v-for="post in posts" :key="post.slug">
-          <PostItem :post="post" />
+          <PostItem
+            :author="post.author"
+            :slug="post.slug"
+            :title="post.title"
+            :createdAt="post.createdAt"
+            :updatedAt="post.updatedAt"
+            :published="post.published"
+            :username="post.username"
+          />
         </template>
       </section>
-      <div v-else>No Posts Yet!</div>
+
+      <section v-else class="w-full">
+        <div>No Posts Yet!</div>
+        <router-link
+          to="/new"
+          class="mt-4 w-fit block bg-transparent font-semibold py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-500 text-indigo-500 hover:text-white transition-all"
+        >
+          Create Post
+        </router-link>
+      </section>
     </main>
   </AuthCheck>
 </template>

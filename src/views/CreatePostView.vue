@@ -14,6 +14,9 @@ const props = defineProps({
   postId: String,
 })
 
+const { user, username } = inject('auth')
+const router = useRouter()
+
 const isPreview = ref(false)
 const isPublished = ref(false)
 const titleInput = ref('')
@@ -21,9 +24,7 @@ const contentInput = ref('')
 const post = ref(null)
 const loading = ref(false)
 
-const { user, username } = inject('auth')
-const router = useRouter()
-
+// Ensure using URL-friendly slug
 const slug = computed(() => {
   return encodeURI(kebabCase(titleInput.value))
 })
@@ -32,8 +33,7 @@ const markdownToHTML = computed(() => {
   return marked(contentInput.value)
 })
 
-const handleCreateNewPost = async () => {
-  console.log('[create a new post]')
+const handleUpdatePost = async () => {
   let data
 
   if (props.postId) {
@@ -61,10 +61,8 @@ const handleCreateNewPost = async () => {
     }
   }
 
-  console.log(data)
   await createNewPost(data)
-
-  router.push('/')
+  router.push('/admin')
 }
 
 const handlePreview = () => {
@@ -76,7 +74,7 @@ const handleDeletePost = async () => {
     await deletePost(user.value.uid, props.postId)
   }
 
-  router.push('/')
+  router.push('/admin')
 }
 
 watchEffect(async () => {
@@ -94,7 +92,7 @@ watchEffect(async () => {
         titleInput.value = postDoc.title
         contentInput.value = postDoc.content
       } else {
-        // Initialize a blank form for a new post
+        // Initialize a blank form
         router.push('/new')
       }
     }
@@ -114,18 +112,31 @@ watchEffect(async () => {
       <section
         class="flex-1 mr-0 sm:mr-4 mb-4 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:px-16 sm:py-8"
       >
-        <div v-if="isPreview" v-html="markdownToHTML" class="prose w-full"></div>
-        <form v-if="!isPreview" class="flex flex-col h-full" @submit.prevent="handleCreateNewPost">
+        <!-- Markdown Preview -->
+        <article v-if="isPreview">
+          <h3 class="font-semibold text-2xl sm:text-4xl">{{ titleInput }}</h3>
+          <div v-html="markdownToHTML" class="prose w-full max-w-none mt-5 sm:mt-8"></div>
+        </article>
+
+        <!-- Edit Form -->
+        <form v-if="!isPreview" class="flex flex-col h-full" @submit.prevent="handleUpdatePost">
           <input
             type="text"
             placeholder="Your title ..."
             v-model="titleInput"
-            class="w-full py-2 sm:py-4 font-semibold text-xl sm:text-2xl focus:outline-none"
+            minlength="3"
+            maxlength="100"
+            required
+            :disabled="postId"
+            class="w-full py-2 sm:py-4 font-semibold text-2xl sm:text-4xl focus:outline-none disabled:bg-transparent"
           />
           <p>Post ID: {{ slug }}</p>
           <textarea
             v-model="contentInput"
             placeholder="Write your feedback here ..."
+            maxlength="4000"
+            minlength="10"
+            required
             oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
             class="py-2 sm:py-4 h-full w-full resize-none overflow-hidden focus:outline-none"
           ></textarea>
@@ -153,6 +164,7 @@ watchEffect(async () => {
           </div>
         </form>
       </section>
+
       <aside
         class="sticky max-w-xs w-full h-80 sm:top-[length:var(--aside-top)] right-0 p-4 sm:p-5"
       >

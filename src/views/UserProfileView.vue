@@ -17,6 +17,7 @@ const posts = ref([])
 const loading = ref(true)
 
 const getUserProfile = async () => {
+  loading.value = true
   const userDoc = await getUserDocByUsername(props.username)
 
   if (userDoc) {
@@ -30,7 +31,6 @@ const getUserProfile = async () => {
 }
 
 watchEffect(async () => {
-  loading.value = true
   await getUserProfile()
 })
 </script>
@@ -61,7 +61,7 @@ watchEffect(async () => {
       </template>
     </section>
     <div v-else class="mt-4 sm:mt-9 text-center text-base sm:text-xl">
-      User has not yet posted any feedback
+      User has not yet posted any feedback.
     </div>
   </main>
 </template>

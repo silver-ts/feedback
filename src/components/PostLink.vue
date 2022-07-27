@@ -1,34 +1,54 @@
 <script setup>
 import { computed } from 'vue'
-import { formatDistanceToNow, format } from 'date-fns'
 
 import MetaHeader from '@/components/MetaHeader.vue'
 import readTime from '@/utils/readTime'
+import { displayDate, displayDistanceToNow } from '@/utils/formatDate'
 
 const props = defineProps({
-  postId: String,
-  post: Object,
+  post: {
+    author: String,
+    content: String,
+    createdAt: {
+      seconds: Number,
+      nanoseconds: Number,
+    },
+    heartCount: Number,
+    photoURL: String,
+    published: Boolean,
+    slug: String,
+    title: String,
+    uid: String,
+    updatedAt: {
+      seconds: Number,
+      nanoseconds: Number,
+    },
+    username: String,
+  },
 })
 
 const readingTime = computed(() => {
   return readTime(props.post.content)
+})
+
+const createdDate = computed(() => {
+  return `${displayDate(props.post.createdAt.seconds)} (${displayDistanceToNow(
+    props.post.createdAt.seconds,
+  )})`
 })
 </script>
 
 <template>
   <article class="mb-4">
     <router-link
-      :to="`/${post.username}/${postId}`"
+      :to="`/${post.username}/${post.slug}`"
       class="block bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:p-6"
     >
       <MetaHeader
         :username="post.username"
         :author="post.author"
         :photoURL="post.photoURL"
-        :createdAt="`${format(
-          new Date(post.createdAt.seconds * 1000),
-          'PP',
-        )} (${formatDistanceToNow(new Date(post.createdAt.seconds * 1000), { addSuffix: true })})`"
+        :createdAt="createdDate"
       />
       <h3
         class="mt-4 sm:mt-6 sm:ml-10 font-semibold text-xl sm:text-2xl hover:text-indigo-500 transition"
