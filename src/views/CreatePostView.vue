@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, inject } from 'vue'
+import { computed, ref, inject, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { serverTimestamp } from 'firebase/firestore'
 import { Switch } from '@headlessui/vue'
@@ -7,12 +7,19 @@ import kebabCase from 'lodash.kebabcase'
 import { marked } from 'marked'
 
 import AuthCheck from '@/components/AuthCheck.vue'
-import { createNewPost } from '@/lib/db'
+import LoaderSpinner from '@/components/LoaderSpinner.vue'
+import { createNewPost, getUserPostContent, getUserDocByUsername, deletePost } from '@/lib/db'
+
+const props = defineProps({
+  postId: String,
+})
 
 const isPreview = ref(false)
 const isPublished = ref(false)
 const titleInput = ref('')
 const contentInput = ref('')
+const post = ref(null)
+const loading = ref(false)
 
 const { user, username } = inject('auth')
 const router = useRouter()
@@ -26,20 +33,32 @@ const markdownToHTML = computed(() => {
 })
 
 const handleCreateNewPost = async () => {
-  const uid = user.value.uid
+  console.log('[create a new post]')
+  let data
 
-  const data = {
-    title: titleInput.value.trim(),
-    slug: slug.value,
-    uid,
-    username: username.value,
-    author: user.value.displayName,
-    published: isPublished.value,
-    photoURL: user.value.photoURL,
-    content: contentInput.value,
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-    heartCount: 0,
+  if (props.postId) {
+    // Update data in existing post
+    data = {
+      ...post.value,
+      published: isPublished.value,
+      content: contentInput.value,
+      updatedAt: serverTimestamp(),
+    }
+  } else {
+    // Create a new post with user data
+    data = {
+      title: titleInput.value.trim(),
+      slug: slug.value,
+      uid: user.value.uid,
+      username: username.value,
+      author: user.value.displayName,
+      published: isPublished.value,
+      photoURL: user.value.photoURL,
+      content: contentInput.value,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      heartCount: 0,
+    }
   }
 
   console.log(data)
@@ -51,11 +70,47 @@ const handleCreateNewPost = async () => {
 const handlePreview = () => {
   isPreview.value = !isPreview.value
 }
+
+const handleDeletePost = async () => {
+  if (props.postId) {
+    await deletePost(user.value.uid, props.postId)
+  }
+
+  router.push('/')
+}
+
+watchEffect(async () => {
+  if (props.postId) {
+    loading.value = true
+    const userDoc = await getUserDocByUsername(username.value)
+
+    if (userDoc) {
+      const postDoc = await getUserPostContent(userDoc.uid, props.postId)
+
+      if (postDoc) {
+        // Update form inputs with fetched data
+        post.value = postDoc
+        isPublished.value = postDoc.published
+        titleInput.value = postDoc.title
+        contentInput.value = postDoc.content
+      } else {
+        // Initialize a blank form for a new post
+        router.push('/new')
+      }
+    }
+
+    loading.value = false
+  }
+})
 </script>
 
 <template>
-  <main class="flex relative flex-col sm:flex-row">
-    <AuthCheck>
+  <main v-if="loading">
+    <LoaderSpinner />
+  </main>
+
+  <AuthCheck>
+    <main v-if="!loading" class="flex relative flex-col sm:flex-row">
       <section
         class="flex-1 mr-0 sm:mr-4 mb-4 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:px-16 sm:py-8"
       >
@@ -109,12 +164,13 @@ const handlePreview = () => {
             Preview
           </button>
           <button
+            @click="handleDeletePost"
             class="mt-2 sm:mt-4 bg-transparent py-2 px-4 rounded-md border border-red-400 hover:bg-red-400 text-red-400 hover:text-white transition-all relative h-11"
           >
             Delete
           </button>
         </div>
       </aside>
-    </AuthCheck>
-  </main>
+    </main>
+  </AuthCheck>
 </template>

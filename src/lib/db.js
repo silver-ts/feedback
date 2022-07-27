@@ -12,6 +12,7 @@ import {
   collectionGroup,
   startAfter,
   Timestamp,
+  deleteDoc,
 } from 'firebase/firestore'
 
 import { db } from '@/lib/firebase'
@@ -169,4 +170,9 @@ export const getNextPostsDocs = async (cursor) => {
 export const createNewPost = async (data) => {
   const docRef = doc(db, `users/${data.uid}/posts`, data.slug)
   await setDoc(docRef, data)
+}
+
+export const deletePost = async (uid, slug) => {
+  const docRef = doc(db, `users/${uid}/posts`, slug)
+  await deleteDoc(docRef)
 }

@@ -50,8 +50,14 @@ const router = createRouter({
       component: AdminView,
     },
     {
+      path: '/admin/:postId',
+      name: 'edit-post',
+      component: CreatePostView,
+      props: true,
+    },
+    {
       path: '/:pathMatch(.*)*',
-      name: 'NotFound',
+      name: 'not-found',
       component: NotFound,
     },
   ],

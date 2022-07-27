@@ -37,9 +37,12 @@ const props = defineProps({
       >
         Draft
       </span>
-      <button class="py-1 px-2 text-sm sm:text-base rounded hover:bg-gray-200/50 transition">
+      <router-link
+        :to="`/admin/${post.slug}`"
+        class="py-1 px-2 text-sm sm:text-base rounded hover:bg-gray-200/50 transition"
+      >
         Edit
-      </button>
+      </router-link>
     </div>
   </article>
 </template>
