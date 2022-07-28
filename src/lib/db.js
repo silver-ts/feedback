@@ -13,6 +13,7 @@ import {
   startAfter,
   Timestamp,
   deleteDoc,
+  increment,
 } from 'firebase/firestore'
 
 import { db } from '@/lib/firebase'
@@ -173,6 +174,40 @@ export const createNewPost = async (data) => {
 }
 
 export const deletePost = async (uid, slug) => {
-  const docRef = doc(db, `users/${uid}/posts`, slug)
+  const docRef = getPostDocRef(uid, slug)
   await deleteDoc(docRef)
+}
+
+export const getHeartDocRef = (uid, slug) => {
+  return doc(db, `users/${uid}/posts/${slug}/hearts`, uid)
+}
+
+export const getPostDocRef = (uid, slug) => {
+  return doc(db, `users/${uid}/posts`, slug)
+}
+
+export const addHeart = async (uid, slug) => {
+  const docRef = getHeartDocRef(uid, slug)
+  const postRef = getPostDocRef(uid, slug)
+
+  const batch = writeBatch(db)
+  // 1. Increment heart counter
+  batch.set(postRef, { heartCount: increment(1) }, { merge: true })
+  // 2. Add a new document to the heart collection
+  batch.set(docRef, { uid })
+
+  await batch.commit()
+}
+
+export const removeHeart = async (uid, slug) => {
+  const docRef = getHeartDocRef(uid, slug)
+  const postRef = getPostDocRef(uid, slug)
+
+  const batch = writeBatch(db)
+  // 1. Decrement heart counter
+  batch.update(postRef, { heartCount: increment(-1) })
+  // 2. Remove document from the heart collection
+  batch.delete(docRef)
+
+  await batch.commit()
 }

@@ -1,11 +1,13 @@
 <script setup>
-import { defineProps, watchEffect, ref, computed } from 'vue'
+import { defineProps, onUnmounted, onMounted, ref, computed } from 'vue'
 import { marked } from 'marked'
+import { onSnapshot } from 'firebase/firestore'
 
 import MetaHeader from '@/components/MetaHeader.vue'
 import LoaderSpinner from '@/components/LoaderSpinner.vue'
 import NotFound from '@/components/NotFound.vue'
-import { getUserPostContent, getUserDocByUsername } from '@/lib/db'
+import HeartButton from '@/components/HeartButton.vue'
+import { getUserDocByUsername, getPostDocRef } from '@/lib/db'
 import { displayDate } from '@/utils/formatDate'
 
 const props = defineProps({
@@ -20,16 +22,27 @@ const markdownToHTML = computed(() => {
   return marked(post.value.content)
 })
 
-watchEffect(async () => {
+// Listen to post document
+const unsubscribe = onMounted(async () => {
   loading.value = true
   const userDoc = await getUserDocByUsername(props.username)
 
   if (userDoc) {
-    const postDoc = await getUserPostContent(userDoc.uid, props.postId)
-    post.value = postDoc
-  }
+    return onSnapshot(
+      getPostDocRef(userDoc.uid, props.postId),
+      { includeMetadataChanges: true },
+      (doc) => {
+        console.log(doc.data())
+        post.value = doc.data()
 
-  loading.value = false
+        loading.value = false
+      },
+    )
+  }
+})
+
+onUnmounted(() => {
+  unsubscribe()
 })
 </script>
 
@@ -60,12 +73,14 @@ watchEffect(async () => {
     >
       <div class="flex items-center justify-center">
         <font-awesome-icon icon="fa-regular fa-heart" class="mr-2" />
-        <span class="text-sm sm:text-base">
+        <div class="text-sm sm:text-base">
           {{
             post.heartCount === 1 ? `${post.heartCount} Reaction` : `${post.heartCount} Reactions`
           }}
-        </span>
+        </div>
       </div>
+
+      <HeartButton :uid="post.uid" :slug="post.slug" />
     </aside>
   </main>
 </template>
