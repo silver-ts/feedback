@@ -1,7 +1,7 @@
 <script setup>
-import { defineProps, onUnmounted, onMounted, ref, computed } from 'vue'
-import { marked } from 'marked'
+import { defineProps, onUnmounted, watchEffect, ref, computed } from 'vue'
 import { onSnapshot } from 'firebase/firestore'
+import { marked } from 'marked'
 
 import MetaHeader from '@/components/MetaHeader.vue'
 import LoaderSpinner from '@/components/LoaderSpinner.vue'
@@ -22,8 +22,8 @@ const markdownToHTML = computed(() => {
   return marked(post.value.content)
 })
 
-// Listen to post document
-const unsubscribe = onMounted(async () => {
+// Listen to the `post` document
+const unsubscribe = watchEffect(async () => {
   loading.value = true
   const userDoc = await getUserDocByUsername(props.username)
 
@@ -32,8 +32,7 @@ const unsubscribe = onMounted(async () => {
       getPostDocRef(userDoc.uid, props.postId),
       { includeMetadataChanges: true },
       (doc) => {
-        console.log(doc.data())
-        post.value = doc.data()
+        post.value = doc.data() || null
 
         loading.value = false
       },
@@ -42,7 +41,9 @@ const unsubscribe = onMounted(async () => {
 })
 
 onUnmounted(() => {
-  unsubscribe()
+  if (unsubscribe) {
+    unsubscribe()
+  }
 })
 </script>
 

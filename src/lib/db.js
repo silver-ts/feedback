@@ -20,23 +20,60 @@ import { db } from '@/lib/firebase'
 import globals from '@/globals'
 
 /**
- * Add user to firestore database
- * @param {Object} user - user specific data
+ * Get `hearts` document reference from Firebase
+ * @param {string} uid User ID
+ * @param {string} slug Post ID
+ * @returns {object} docRef
+ */
+export const getHeartDocRef = (uid, slug) => {
+  return doc(db, `users/${uid}/posts/${slug}/hearts`, uid)
+}
+
+/**
+ * Get `posts` document reference from Firebase
+ * @param {string} uid User ID
+ * @param {string} slug Post ID
+ * @returns {object} docRef
+ */
+export const getPostDocRef = (uid, slug) => {
+  return doc(db, `users/${uid}/posts`, slug)
+}
+
+/**
+ * Get `usernames` document reference from Firebase
+ * @param {string} username
+ * @returns {object} docRef
+ */
+export const getUsernameDocRef = (username) => {
+  return doc(db, 'usernames', username)
+}
+
+/**
+ * Get `users` document reference from Firebase
+ * @param {string} uid User ID
+ * @returns {object} docRef
+ */
+export const getUserDocRef = (uid) => {
+  return doc(db, 'users', uid)
+}
+
+/**
+ * Add user to the database
+ * @param {object} user - User data
+ * @returns {object} docRef
  */
 export const createUser = async (user) => {
-  const userRef = doc(db, 'users', user.uid)
-  await setDoc(userRef, user, { merge: true })
+  await setDoc(getUserDocRef(user.uid), user, { merge: true })
 }
+
 /**
  * Check if username is already taken (or not exists)
  * @param {string} username
  * @returns {boolean}
  */
 export const checkUsername = async (username) => {
-  const userNameRef = doc(db, 'usernames', username)
-  const userNameSnap = await getDoc(userNameRef)
-
-  return userNameSnap.exists()
+  const usernameSnap = await getDoc(getUsernameDocRef(username))
+  return usernameSnap.exists()
 }
 
 /**
@@ -45,11 +82,11 @@ export const checkUsername = async (username) => {
  * @param {string} username
  */
 export const updateUsername = async (uid, username) => {
-  const userNameRef = doc(db, 'usernames', username)
-  const userRef = doc(db, 'users', uid)
+  const usernameRef = getUsernameDocRef(username)
+  const userRef = getUserDocRef(uid)
 
   const batch = writeBatch(db)
-  batch.set(userNameRef, { uid })
+  batch.set(usernameRef, { uid })
   batch.set(userRef, { username }, { merge: true })
 
   await batch.commit()
@@ -61,9 +98,7 @@ export const updateUsername = async (uid, username) => {
  * @returns {string | null} - username
  */
 export const getUsername = async (uid) => {
-  const userRef = doc(db, 'users', uid)
-  const userSnap = await getDoc(userRef)
-
+  const userSnap = await getDoc(getUserDocRef(uid))
   return userSnap.data()?.username || null
 }
 
@@ -103,7 +138,7 @@ export const getUserPosts = async (uid) => {
 
 /**
  * Get all user posts (published & drafts)
- * @param {string} uid user id
+ * @param {string} uid User ID
  */
 export const getAllUserPosts = async (uid) => {
   if (uid) {
@@ -123,21 +158,19 @@ export const getAllUserPosts = async (uid) => {
 }
 
 /**
- * Get user post from url
- * @param {string} uid user id
- * @param {string} slug post url slug
+ * Get user post data from URL
+ * @param {string} uid User ID
+ * @param {string} slug Post ID
  */
 export const getUserPostContent = async (uid, slug) => {
   if (uid) {
-    const postRef = doc(db, `users/${uid}/posts`, slug)
-    const postSnap = await getDoc(postRef)
-
+    const postSnap = await getDoc(getPostDocRef(uid, slug))
     return postSnap.data() || null
   }
 }
 
 /**
- * Get first subset of recent posts
+ * Get the first subset of recent posts
  */
 export const getPostsDocs = async () => {
   const firstPostsRef = query(
@@ -152,8 +185,8 @@ export const getPostsDocs = async () => {
 }
 
 /**
- * Get next subset of recent posts
- * @param {number} cursor - milliseconds
+ * Get the next subset of recent posts
+ * @param {number} cursor - Date in milliseconds
  */
 export const getNextPostsDocs = async (cursor) => {
   const nextPostsRef = query(
@@ -168,24 +201,28 @@ export const getNextPostsDocs = async (cursor) => {
   return postsSnap
 }
 
+/**
+ * Create a new post
+ * @param {object} data Post data
+ */
 export const createNewPost = async (data) => {
-  const docRef = doc(db, `users/${data.uid}/posts`, data.slug)
-  await setDoc(docRef, data)
+  await setDoc(getPostDocRef(data.uid, data.slug), data)
 }
 
+/**
+ * Delete post by slug ID
+ * @param {string} uid User ID
+ * @param {string} slug Post ID
+ */
 export const deletePost = async (uid, slug) => {
-  const docRef = getPostDocRef(uid, slug)
-  await deleteDoc(docRef)
+  await deleteDoc(getPostDocRef(uid, slug))
 }
 
-export const getHeartDocRef = (uid, slug) => {
-  return doc(db, `users/${uid}/posts/${slug}/hearts`, uid)
-}
-
-export const getPostDocRef = (uid, slug) => {
-  return doc(db, `users/${uid}/posts`, slug)
-}
-
+/**
+ * Increment heart counter for a given post
+ * @param {string} uid User ID
+ * @param {string} slug Post ID
+ */
 export const addHeart = async (uid, slug) => {
   const docRef = getHeartDocRef(uid, slug)
   const postRef = getPostDocRef(uid, slug)
@@ -199,6 +236,11 @@ export const addHeart = async (uid, slug) => {
   await batch.commit()
 }
 
+/**
+ * Decrement heart counter for a given post
+ * @param {string} uid User ID
+ * @param {string} slug Post ID
+ */
 export const removeHeart = async (uid, slug) => {
   const docRef = getHeartDocRef(uid, slug)
   const postRef = getPostDocRef(uid, slug)

@@ -10,15 +10,7 @@ const props = defineProps({
 
 const isHearted = ref(false)
 
-const handleAddHeart = async () => {
-  await addHeart(props.uid, props.slug)
-}
-
-const handleRemoveHeart = async () => {
-  await removeHeart(props.uid, props.slug)
-}
-
-// Listen to heart document
+// Listen to the `heart` document
 const unsubscribe = onMounted(() => {
   return onSnapshot(
     getHeartDocRef(props.uid, props.slug),
@@ -32,6 +24,14 @@ const unsubscribe = onMounted(() => {
 onUnmounted(() => {
   unsubscribe()
 })
+
+const handleAddHeart = async () => {
+  await addHeart(props.uid, props.slug)
+}
+
+const handleRemoveHeart = async () => {
+  await removeHeart(props.uid, props.slug)
+}
 </script>
 
 <template>
