@@ -3,6 +3,7 @@ import { inject } from 'vue'
 
 import NavMenu from '@/components/NavMenu.vue'
 import EmptyNavBar from '@/components/EmptyNavBar.vue'
+import globals from '@/globals'
 
 const { username, loading } = inject('auth')
 </script>
@@ -14,7 +15,9 @@ const { username, loading } = inject('auth')
     <nav
       class="container h-[var(--header-height)] mx-auto max-w-7xl flex items-center justify-between"
     >
-      <router-link to="/" class="text-xl mx-2 sm:mx-4 font-light">✒️ Vue Feedback</router-link>
+      <router-link to="/" class="text-xl mx-2 sm:mx-4 font-light">
+        {{ globals.appName }}
+      </router-link>
       <ul class="flex items-center">
         <li v-if="loading">
           <EmptyNavBar />

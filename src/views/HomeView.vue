@@ -1,8 +1,13 @@
 <script setup>
 import { inject } from 'vue'
+import { useMeta } from 'vue-meta'
 
 import PostLink from '@/components/PostLink.vue'
 import LoaderSpinner from '@/components/LoaderSpinner.vue'
+
+useMeta({
+  title: 'Home page',
+})
 
 const { posts, loading, getMorePosts, isPostsEnd } = inject('posts')
 </script>

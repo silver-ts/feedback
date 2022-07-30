@@ -6,6 +6,7 @@ import UserAvatar from '@/components/UserAvatar.vue'
 import EmptyUserProfile from '@/components/EmptyUserProfile.vue'
 import NotFound from '@/components/NotFound.vue'
 import { getUserPosts, getUserDocByUsername } from '@/lib/db'
+import useReactiveMeta from '@/lib/useReactiveMeta'
 import globals from '@/globals'
 
 const props = defineProps({
@@ -15,6 +16,10 @@ const props = defineProps({
 const user = ref(null)
 const posts = ref([])
 const loading = ref(true)
+
+useReactiveMeta(() => {
+  return user.value?.displayName || globals.defaultUserName
+})
 
 const getUserProfile = async () => {
   loading.value = true

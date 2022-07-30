@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, inject, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
+import { useMeta } from 'vue-meta'
 import { serverTimestamp } from 'firebase/firestore'
 import { Switch } from '@headlessui/vue'
 import kebabCase from 'lodash.kebabcase'
@@ -12,6 +13,10 @@ import { createNewPost, getUserPostContent, getUserDocByUsername, deletePost } f
 
 const props = defineProps({
   postId: String,
+})
+
+useMeta({
+  title: props.postId ? 'Edit post' : 'Write a new post',
 })
 
 const { user, username } = inject('auth')

@@ -1,10 +1,15 @@
 <script setup>
 import { watchEffect, ref, inject } from 'vue'
+import { useMeta } from 'vue-meta'
 
 import AuthCheck from '@/components/AuthCheck.vue'
 import PostItem from '@/components/PostItem.vue'
 import PageLoader from '@/components/PageLoader.vue'
 import { getAllUserPosts, getUserDocByUsername } from '@/lib/db'
+
+useMeta({
+  title: 'Dashboard',
+})
 
 const { username } = inject('auth')
 const posts = ref([])

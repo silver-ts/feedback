@@ -1,10 +1,15 @@
 <script setup>
 import { ref, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
+import { useMeta } from 'vue-meta'
 import debounce from 'lodash.debounce'
 
 import AuthContainer from '@/components/AuthContainer.vue'
 import { checkUsername } from '@/lib/db'
+
+useMeta({
+  title: 'Enter your username',
+})
 
 const { handleUsernameUpdate } = inject('auth')
 const router = useRouter()

@@ -1,12 +1,13 @@
 <script setup>
-import { defineProps, onUnmounted, watchEffect, ref, computed, inject } from 'vue'
+import { onUnmounted, watchEffect, ref, computed, inject } from 'vue'
 import { onSnapshot } from 'firebase/firestore'
 import { marked } from 'marked'
 
 import MetaHeader from '@/components/MetaHeader.vue'
 import NotFound from '@/components/NotFound.vue'
 import HeartButton from '@/components/HeartButton.vue'
-import PageLoader from '@/components/LoaderSPageLoaderpinner.vue'
+import PageLoader from '@/components/PageLoader.vue'
+import useReactiveMeta from '@/lib/useReactiveMeta'
 import { getUserDocByUsername, getPostDocRef } from '@/lib/db'
 import { displayDate } from '@/utils/formatDate'
 
@@ -18,6 +19,10 @@ const props = defineProps({
 const { user } = inject('auth')
 const post = ref(null)
 const loading = ref(true)
+
+useReactiveMeta(() => {
+  return post.value?.title
+})
 
 const markdownToHTML = computed(() => {
   return marked(post.value.content)

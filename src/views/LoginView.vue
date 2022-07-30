@@ -1,11 +1,16 @@
 <script setup>
 import { watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useMeta } from 'vue-meta'
 
 import AuthContainer from '@/components/AuthContainer.vue'
 import EnterNameView from '@/views/EnterNameView.vue'
 import PageLoader from '@/components/PageLoader.vue'
 import { useAuth } from '@/lib/useAuth'
+
+useMeta({
+  title: 'Login',
+})
 
 const { user, username, loading, handlesignInAnonymously, handleSignInWithGoogle } = useAuth()
 const router = useRouter()
