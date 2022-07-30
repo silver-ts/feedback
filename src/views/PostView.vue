@@ -1,12 +1,12 @@
 <script setup>
-import { defineProps, onUnmounted, watchEffect, ref, computed } from 'vue'
+import { defineProps, onUnmounted, watchEffect, ref, computed, inject } from 'vue'
 import { onSnapshot } from 'firebase/firestore'
 import { marked } from 'marked'
 
 import MetaHeader from '@/components/MetaHeader.vue'
-import LoaderSpinner from '@/components/LoaderSpinner.vue'
 import NotFound from '@/components/NotFound.vue'
 import HeartButton from '@/components/HeartButton.vue'
+import PageLoader from '@/components/LoaderSPageLoaderpinner.vue'
 import { getUserDocByUsername, getPostDocRef } from '@/lib/db'
 import { displayDate } from '@/utils/formatDate'
 
@@ -15,6 +15,7 @@ const props = defineProps({
   postId: String,
 })
 
+const { user } = inject('auth')
 const post = ref(null)
 const loading = ref(true)
 
@@ -48,15 +49,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <main v-if="loading">
-    <LoaderSpinner />
-  </main>
+  <PageLoader :loading="loading" />
 
-  <NotFound v-if="!post && !loading" />
-
-  <main v-if="post && !loading" class="flex relative flex-col sm:flex-row">
+  <main v-if="post && !loading" class="flex relative flex-col md:flex-row">
+    <!-- Post content -->
     <section
-      class="flex-1 mr-0 sm:mr-4 mb-4 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:px-16 sm:py-8"
+      class="flex-1 mr-0 md:mr-4 mb-4 md:mb-0 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:px-16 sm:py-8"
     >
       <MetaHeader
         :author="post.author"
@@ -68,20 +66,29 @@ onUnmounted(() => {
         <div v-html="markdownToHTML" class="prose w-full max-w-none mt-5 sm:mt-8"></div>
       </article>
     </section>
+    <!-- Toolbar -->
     <aside
       v-if="post && !loading"
-      class="sticky max-w-xs w-full h-80 sm:top-[length:var(--aside-top)] right-0 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:p-5"
+      class="sticky max-w-xs w-full h-60 mx-auto sm:top-[length:var(--aside-top)] right-0 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:p-5 text-center"
     >
       <div class="flex items-center justify-center">
         <font-awesome-icon icon="fa-regular fa-heart" class="mr-2" />
-        <div class="text-sm sm:text-base">
+        <span>
           {{
             post.heartCount === 1 ? `${post.heartCount} Reaction` : `${post.heartCount} Reactions`
           }}
-        </div>
+        </span>
       </div>
-
-      <HeartButton :uid="post.uid" :slug="post.slug" />
+      <HeartButton :uid="post.uid" :slug="post.slug" class="mt-4" />
+      <router-link
+        v-if="user?.uid === post.uid"
+        :to="`/admin/${postId}`"
+        class="mt-4 block w-full bg-indigo-500 py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-600 text-white transition-all"
+      >
+        Edit
+      </router-link>
     </aside>
   </main>
+
+  <NotFound v-if="!post && !loading" />
 </template>

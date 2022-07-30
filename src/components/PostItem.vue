@@ -22,10 +22,11 @@ defineProps({
   <article
     class="flex flex-col sm:flex-row justify-between items-start sm:items-center hover:bg-gray-100/50 transition"
   >
+    <!-- Post Link -->
     <router-link :to="`/${username}/${slug}`" class="group block p-4 sm:p-6 w-full">
-      <div class="font-semibold text-xl sm:text-2xl group-hover:text-indigo-500 transition">
+      <h3 class="font-semibold text-xl sm:text-2xl group-hover:text-indigo-500 transition">
         {{ title }}
-      </div>
+      </h3>
       <span class="block sm:inline text-sm mr-2 mt-2 sm:mt-0">
         <span class="font-semibold">Published:</span>
         {{ displayDate(createdAt.seconds) }}
@@ -35,6 +36,8 @@ defineProps({
         {{ displayDate(updatedAt.seconds) }}
       </span>
     </router-link>
+
+    <!-- Toolbar -->
     <div class="flex justify-between items-center p-4 sm:p-6">
       <span
         v-if="published"

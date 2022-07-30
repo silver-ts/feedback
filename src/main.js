@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faGithub, faGoogle } from '@fortawesome/free-brands-svg-icons'
-import { faArrowLeft, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faUser, faHeartBroken } from '@fortawesome/free-solid-svg-icons'
 import { faHeart } from '@fortawesome/free-regular-svg-icons'
 
 import App from '@/App.vue'
@@ -19,7 +19,7 @@ app.provide('auth', auth)
 app.provide('posts', posts)
 
 // Fontawesome icons
-library.add(faGithub, faGoogle, faArrowLeft, faHeart, faUser)
+library.add(faGithub, faGoogle, faArrowLeft, faHeart, faUser, faHeartBroken)
 app.component('font-awesome-icon', FontAwesomeIcon)
 
 // Router

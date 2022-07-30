@@ -7,7 +7,7 @@ import kebabCase from 'lodash.kebabcase'
 import { marked } from 'marked'
 
 import AuthCheck from '@/components/AuthCheck.vue'
-import LoaderSpinner from '@/components/LoaderSpinner.vue'
+import PageLoader from '@/components/PageLoader.vue'
 import { createNewPost, getUserPostContent, getUserDocByUsername, deletePost } from '@/lib/db'
 
 const props = defineProps({
@@ -103,18 +103,16 @@ watchEffect(async () => {
 </script>
 
 <template>
-  <main v-if="loading">
-    <LoaderSpinner />
-  </main>
-
   <AuthCheck>
-    <main v-if="!loading" class="flex relative flex-col sm:flex-row">
+    <PageLoader :loading="loading" />
+
+    <main v-if="!loading" class="flex relative flex-col md:flex-row">
       <section
-        class="flex-1 mr-0 sm:mr-4 mb-4 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:px-16 sm:py-8"
+        class="flex-1 mr-0 md:mr-4 mb-4 md:mb-0 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:px-16 sm:py-8"
       >
         <!-- Markdown Preview -->
         <article v-if="isPreview">
-          <h3 class="font-semibold text-2xl sm:text-4xl">{{ titleInput }}</h3>
+          <h2 class="font-semibold text-2xl sm:text-4xl">{{ titleInput }}</h2>
           <div v-html="markdownToHTML" class="prose w-full max-w-none mt-5 sm:mt-8"></div>
         </article>
 
@@ -165,19 +163,20 @@ watchEffect(async () => {
         </form>
       </section>
 
+      <!-- Toolbar -->
       <aside
-        class="sticky max-w-xs w-full h-80 sm:top-[length:var(--aside-top)] right-0 p-4 sm:p-5"
+        class="sticky max-w-xs w-full h-60 mx-auto sm:top-[length:var(--aside-top)] right-0 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:p-5 text-center"
       >
         <div class="flex flex-col">
           <button
             @click="handlePreview"
-            class="bg-transparent py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-500 text-indigo-500 hover:text-white transition-all relative h-11"
+            class="w-full bg-indigo-500 py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-600 text-white transition-all relative h-11"
           >
             Preview
           </button>
           <button
             @click="handleDeletePost"
-            class="mt-2 sm:mt-4 bg-transparent py-2 px-4 rounded-md border border-red-400 hover:bg-red-400 text-red-400 hover:text-white transition-all relative h-11"
+            class="mt-4 w-full bg-red-400 py-2 px-4 rounded-md border border-red-400 hover:bg-red-500 text-white transition-all relative h-11"
           >
             Delete
           </button>

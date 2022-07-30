@@ -3,7 +3,7 @@ import { watchEffect, ref, inject } from 'vue'
 
 import AuthCheck from '@/components/AuthCheck.vue'
 import PostItem from '@/components/PostItem.vue'
-import LoaderSpinner from '@/components/LoaderSpinner.vue'
+import PageLoader from '@/components/PageLoader.vue'
 import { getAllUserPosts, getUserDocByUsername } from '@/lib/db'
 
 const { username } = inject('auth')
@@ -25,10 +25,9 @@ watchEffect(async () => {
 
 <template>
   <AuthCheck>
-    <main v-if="loading">
-      <LoaderSpinner />
-    </main>
+    <PageLoader :loading="loading" />
 
+    <!-- All Posts -->
     <main v-if="posts && !loading" class="relative flex flex-col items-center w-full max-w-4xl">
       <h2 class="w-full font-semibold text-lg sm:text-2xl mb-4 sm:mb-5">Posts</h2>
       <section
@@ -48,6 +47,7 @@ watchEffect(async () => {
         </template>
       </section>
 
+      <!-- No posts -->
       <section v-else class="w-full">
         <div>No Posts Yet!</div>
         <router-link

@@ -3,8 +3,8 @@ import { watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import AuthContainer from '@/components/AuthContainer.vue'
-import LoaderSpinner from '@/components/LoaderSpinner.vue'
 import EnterNameView from '@/views/EnterNameView.vue'
+import PageLoader from '@/components/PageLoader.vue'
 import { useAuth } from '@/lib/useAuth'
 
 const { user, username, loading, handlesignInAnonymously, handleSignInWithGoogle } = useAuth()
@@ -20,9 +20,7 @@ watch(username, handleRedirect)
 </script>
 
 <template>
-  <main v-if="loading">
-    <LoaderSpinner />
-  </main>
+  <PageLoader :loading="loading" />
 
   <AuthContainer v-if="!user && !loading" :title="'Welcome to Vue Feedback!'">
     <button

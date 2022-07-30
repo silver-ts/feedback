@@ -38,8 +38,6 @@ watchEffect(async () => {
 <template>
   <EmptyUserProfile v-if="loading" />
 
-  <NotFound v-if="!user && !loading" />
-
   <main v-if="user && !loading">
     <header class="text-center">
       <UserAvatar
@@ -64,4 +62,6 @@ watchEffect(async () => {
       User has not yet posted any feedback.
     </div>
   </main>
+
+  <NotFound v-if="!user && !loading" />
 </template>
