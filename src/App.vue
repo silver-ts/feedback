@@ -7,6 +7,25 @@ import globals from '@/globals'
 
 useMeta({
   htmlAttrs: { lang: 'en', amp: true },
+  meta: [
+    // Twitter
+    { name: 'twitter:card', content: 'summary' },
+    { name: 'twitter:title', content: 'Vue Feedback' },
+    {
+      name: 'twitter:description',
+      content: '✒️ A public feedback board with user voting',
+    },
+    { name: 'twitter:image', content: '' },
+    // Facebook OG
+    { property: 'og:title', content: 'Vue Feedback' },
+    { property: 'og:site_name', content: 'Vue Feedback' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:image', content: '' },
+    {
+      property: 'og:description',
+      content: '✒️ A public feedback board with user voting',
+    },
+  ],
 })
 </script>
 

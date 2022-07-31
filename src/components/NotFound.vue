@@ -1,3 +1,11 @@
+<script setup>
+import { useMeta } from 'vue-meta'
+
+useMeta({
+  title: '404 Not Found',
+})
+</script>
+
 <template>
   <main class="flex items-center justify-center flex-col">
     <h2 class="text-center text-2xl sm:text-6xl font-light">404</h2>
