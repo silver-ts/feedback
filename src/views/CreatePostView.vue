@@ -9,6 +9,7 @@ import { marked } from 'marked'
 
 import AuthCheck from '@/components/AuthCheck.vue'
 import PageLoader from '@/components/PageLoader.vue'
+import useToastNotify from '@/lib/useToastNotify'
 import { createNewPost, getUserPostContent, getUserDocByUsername, deletePost } from '@/lib/db'
 
 const props = defineProps({
@@ -67,6 +68,8 @@ const handleUpdatePost = async () => {
   }
 
   await createNewPost(data)
+
+  useToastNotify(props.postId ? 'Post updated successfully!' : 'Post created successfully!')
   router.push('/admin')
 }
 
@@ -79,6 +82,7 @@ const handleDeletePost = async () => {
     await deletePost(user.value.uid, props.postId)
   }
 
+  useToastNotify('Post deleted successfully.')
   router.push('/admin')
 }
 
@@ -131,9 +135,9 @@ watchEffect(async () => {
             maxlength="100"
             required
             :disabled="postId"
-            class="w-full py-2 sm:py-4 font-semibold text-2xl sm:text-4xl focus:outline-none disabled:bg-transparent"
+            class="w-full font-semibold text-2xl sm:text-4xl focus:outline-none disabled:bg-transparent"
           />
-          <p>Post ID: {{ slug }}</p>
+          <p class="py-2 sm:py-4">Post ID: {{ slug }}</p>
           <textarea
             v-model="contentInput"
             placeholder="Write your feedback here ..."

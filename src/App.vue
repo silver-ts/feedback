@@ -30,12 +30,14 @@ useMeta({
 </script>
 
 <template>
+  <!-- SEO -->
   <metainfo>
     <template v-slot:title="{ content }">
       {{ content ? `${content} - ${globals.name}` : `${globals.name}` }}
     </template>
   </metainfo>
 
+  <!-- Page Layout -->
   <NavBar />
   <router-view />
   <PageFooter />
