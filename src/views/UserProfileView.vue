@@ -5,8 +5,8 @@ import PostLink from '@/components/PostLink.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import EmptyUserProfile from '@/components/EmptyUserProfile.vue'
 import NotFound from '@/components/NotFound.vue'
-import { getUserPosts, getUserDocByUsername } from '@/lib/db'
 import useReactiveMeta from '@/lib/useReactiveMeta'
+import { getUserPosts, getUserDocByUsername } from '@/lib/db'
 import globals from '@/globals'
 
 const props = defineProps({
@@ -17,6 +17,7 @@ const user = ref(null)
 const posts = ref([])
 const loading = ref(true)
 
+// Dynamic page title
 useReactiveMeta(() => {
   return user.value?.displayName || globals.defaultUserName
 })
@@ -35,14 +36,14 @@ const getUserProfile = async () => {
   loading.value = false
 }
 
-watchEffect(async () => {
-  await getUserProfile()
-})
+watchEffect(async () => await getUserProfile())
 </script>
 
 <template>
+  <!-- Page skeleton -->
   <EmptyUserProfile v-if="loading" />
 
+  <!-- User profile -->
   <main v-if="user && !loading">
     <header class="text-center">
       <UserAvatar
@@ -68,5 +69,6 @@ watchEffect(async () => {
     </div>
   </main>
 
+  <!-- 404 -->
   <NotFound v-if="!user && !loading" />
 </template>

@@ -10,6 +10,7 @@ const { user, username, handleSignOut } = inject('auth')
 
 <template>
   <Menu as="div" class="relative mx-2 sm:mx-4 flex items-center justify-center">
+    <!-- Open Button -->
     <MenuButton v-slot="{ open }">
       <UserAvatar
         :photoURL="user?.photoURL"
@@ -17,6 +18,8 @@ const { user, username, handleSignOut } = inject('auth')
         :class="{ 'ring-indigo-200/50': open }"
       />
     </MenuButton>
+
+    <!-- Dropdown Menu -->
     <MenuItems
       class="absolute right-0 top-8 mt-2 w-60 origin-top-right flex flex-col rounded-md bg-white shadow-md border border-gray-400/50 focus:outline-none divide-y divide-gray-200"
     >

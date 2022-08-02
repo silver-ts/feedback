@@ -9,12 +9,6 @@
   --aside-top: 90px; /* 58px + 32px => header height + main top padding */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Customize these variable */
-  }
-}
-
 @layer base {
   *,
   *::before,

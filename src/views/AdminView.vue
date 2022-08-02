@@ -7,13 +7,11 @@ import PostItem from '@/components/PostItem.vue'
 import PageLoader from '@/components/PageLoader.vue'
 import { getAllUserPosts, getUserDocByUsername } from '@/lib/db'
 
-useMeta({
-  title: 'Dashboard',
-})
-
 const { username } = inject('auth')
+const loading = ref(false)
 const posts = ref([])
-const loading = ref(true)
+
+useMeta({ title: 'Dashboard' })
 
 watchEffect(async () => {
   loading.value = true
@@ -32,7 +30,7 @@ watchEffect(async () => {
   <AuthCheck>
     <PageLoader :loading="loading" />
 
-    <!-- All Posts -->
+    <!-- Dashboard -->
     <main v-if="posts && !loading" class="relative flex flex-col items-center w-full max-w-4xl">
       <h2 class="w-full font-semibold text-lg sm:text-2xl mb-4 sm:mb-5">Posts</h2>
       <section

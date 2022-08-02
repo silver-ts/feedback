@@ -8,12 +8,10 @@ import EnterNameView from '@/views/EnterNameView.vue'
 import PageLoader from '@/components/PageLoader.vue'
 import { useAuth } from '@/lib/useAuth'
 
-useMeta({
-  title: 'Login',
-})
-
 const { user, username, loading, handlesignInAnonymously, handleSignInWithGoogle } = useAuth()
 const router = useRouter()
+
+useMeta({ title: 'Login' })
 
 const handleRedirect = (username) => {
   if (username) {
@@ -27,6 +25,7 @@ watch(username, handleRedirect)
 <template>
   <PageLoader :loading="loading" />
 
+  <!-- Login Options -->
   <AuthContainer v-if="!user && !loading" :title="'Welcome to Vue Feedback!'">
     <button
       @click="handleSignInWithGoogle"
@@ -47,5 +46,6 @@ watch(username, handleRedirect)
     </router-link>
   </AuthContainer>
 
+  <!-- Entername Form -->
   <EnterNameView v-else-if="user && !username && !loading" />
 </template>

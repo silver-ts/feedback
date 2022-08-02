@@ -20,14 +20,6 @@ const { user } = inject('auth')
 const post = ref(null)
 const loading = ref(true)
 
-useReactiveMeta(() => {
-  return post.value?.title
-})
-
-const markdownToHTML = computed(() => {
-  return marked(post.value.content)
-})
-
 // Listen to the `post` document
 const unsubscribe = watchEffect(async () => {
   loading.value = true
@@ -46,10 +38,18 @@ const unsubscribe = watchEffect(async () => {
   }
 })
 
+// Stop db watcher
 onUnmounted(() => {
-  if (unsubscribe) {
-    unsubscribe()
-  }
+  unsubscribe && unsubscribe()
+})
+
+// Dynamic page title
+useReactiveMeta(() => {
+  return post.value?.title
+})
+
+const markdownToHTML = computed(() => {
+  return marked(post.value.content)
 })
 </script>
 

@@ -15,14 +15,18 @@ const { username, loading } = inject('auth')
     <nav
       class="container h-[var(--header-height)] mx-auto max-w-7xl flex items-center justify-between"
     >
+      <!-- Branding -->
       <router-link to="/" class="text-xl mx-2 sm:mx-4 font-light">
         {{ globals.appName }}
       </router-link>
+
       <ul class="flex items-center">
+        <!-- Menu skeleton -->
         <li v-if="loading">
           <EmptyNavBar />
         </li>
 
+        <!-- Menu -->
         <template v-if="username && !loading">
           <li>
             <router-link

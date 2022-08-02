@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onUnmounted, onMounted } from 'vue'
 import { onSnapshot } from 'firebase/firestore'
+
 import { addHeart, removeHeart, getHeartDocRef } from '@/lib/db'
 
 const props = defineProps({
@@ -21,9 +22,8 @@ const unsubscribe = onMounted(() => {
   )
 })
 
-onUnmounted(() => {
-  unsubscribe()
-})
+// Stop db watcher
+onUnmounted(() => unsubscribe())
 
 const handleAddHeart = async () => {
   await addHeart(props.uid, props.slug)

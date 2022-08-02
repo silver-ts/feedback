@@ -16,10 +16,6 @@ const props = defineProps({
   postId: String,
 })
 
-useMeta({
-  title: props.postId ? 'Edit post' : 'Write a new post',
-})
-
 const { user, username } = inject('auth')
 const router = useRouter()
 
@@ -29,6 +25,32 @@ const titleInput = ref('')
 const contentInput = ref('')
 const post = ref(null)
 const loading = ref(false)
+
+useMeta({ title: props.postId ? 'Edit post' : 'Write a new post' })
+
+watchEffect(async () => {
+  if (props.postId) {
+    loading.value = true
+    const userDoc = await getUserDocByUsername(username.value)
+
+    if (userDoc) {
+      const postDoc = await getUserPostContent(userDoc.uid, props.postId)
+
+      if (postDoc) {
+        // Update form inputs with fetched data
+        post.value = postDoc
+        isPublished.value = postDoc.published
+        titleInput.value = postDoc.title
+        contentInput.value = postDoc.content
+      } else {
+        // Initialize a blank form
+        router.push('/new')
+      }
+    }
+
+    loading.value = false
+  }
+})
 
 // Ensure using URL-friendly slug
 const slug = computed(() => {
@@ -85,36 +107,13 @@ const handleDeletePost = async () => {
   useToastNotify('Post deleted successfully.')
   router.push('/admin')
 }
-
-watchEffect(async () => {
-  if (props.postId) {
-    loading.value = true
-    const userDoc = await getUserDocByUsername(username.value)
-
-    if (userDoc) {
-      const postDoc = await getUserPostContent(userDoc.uid, props.postId)
-
-      if (postDoc) {
-        // Update form inputs with fetched data
-        post.value = postDoc
-        isPublished.value = postDoc.published
-        titleInput.value = postDoc.title
-        contentInput.value = postDoc.content
-      } else {
-        // Initialize a blank form
-        router.push('/new')
-      }
-    }
-
-    loading.value = false
-  }
-})
 </script>
 
 <template>
   <AuthCheck>
     <PageLoader :loading="loading" />
 
+    <!-- Post section -->
     <main v-if="!loading" class="flex relative flex-col md:flex-row">
       <section
         class="flex-1 mr-0 md:mr-4 mb-4 md:mb-0 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:px-16 sm:py-8"
@@ -146,7 +145,10 @@ watchEffect(async () => {
             required
             oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
             class="py-2 sm:py-4 h-full w-full resize-none overflow-hidden focus:outline-none"
-          ></textarea>
+          >
+          </textarea>
+
+          <!-- Form submit -->
           <div class="mt-2 sm:mt-4 flex flex-col sm:flex-row justify-between items-center">
             <div class="flex items-center mb-4 sm:mb-0">
               <span class="mr-2">Published</span>
@@ -159,7 +161,8 @@ watchEffect(async () => {
                   aria-hidden="true"
                   :class="isPublished ? 'translate-x-4' : 'translate-x-0'"
                   class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
-                ></span>
+                >
+                </span>
               </Switch>
             </div>
             <button

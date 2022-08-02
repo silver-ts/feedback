@@ -1,15 +1,15 @@
 <script setup>
-import { inject } from 'vue'
+import { inject, watchEffect } from 'vue'
 import { useMeta } from 'vue-meta'
 
 import PostLink from '@/components/PostLink.vue'
 import LoaderSpinner from '@/components/LoaderSpinner.vue'
 
-useMeta({
-  title: 'Home page',
-})
+const { posts, loading, getMorePosts, isPostsEnd, getPosts } = inject('posts')
 
-const { posts, loading, getMorePosts, isPostsEnd } = inject('posts')
+useMeta({ title: 'Home page' })
+
+watchEffect(async () => await getPosts())
 </script>
 
 <template>
@@ -20,6 +20,7 @@ const { posts, loading, getMorePosts, isPostsEnd } = inject('posts')
         <template v-for="post in posts" :key="post.slug">
           <PostLink :post="post" />
         </template>
+
         <!-- Load more -->
         <div class="flex items-center justify-center mt-4 sm:mt-8">
           <button
@@ -29,17 +30,17 @@ const { posts, loading, getMorePosts, isPostsEnd } = inject('posts')
           >
             <span class="font-semibold">Load more posts</span>
           </button>
-
           <div v-if="isPostsEnd">You have reached the end!</div>
         </div>
       </template>
+
+      <!-- Loading -->
+      <LoaderSpinner v-if="loading" />
 
       <!-- No posts -->
       <div v-if="posts.length === 0 && !loading" class="text-center text-base sm:text-xl">
         Log in to create a first feedback :)
       </div>
-
-      <LoaderSpinner v-if="loading" />
     </section>
   </main>
 </template>

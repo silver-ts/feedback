@@ -1,9 +1,7 @@
 <script setup>
 import { useMeta } from 'vue-meta'
 
-useMeta({
-  title: '404 Not Found',
-})
+useMeta({ title: '404 Not Found' })
 </script>
 
 <template>

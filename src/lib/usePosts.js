@@ -1,14 +1,17 @@
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import { getPostsDocs, getNextPostsDocs } from '@/lib/db'
 import globals from '@/globals'
 
 export const usePosts = () => {
   const posts = ref([])
   const isPostsEnd = ref(false)
-  const loading = ref(true)
+  const loading = ref(false)
 
   const getPosts = async () => {
-    console.log('[getPosts]')
+    loading.value = true
+    posts.value = []
+    isPostsEnd.value = false
+
     try {
       const postsSnap = await getPostsDocs()
 
@@ -46,14 +49,11 @@ export const usePosts = () => {
     }
   }
 
-  watchEffect(async () => {
-    getPosts()
-  })
-
   return {
     posts,
     loading,
     isPostsEnd,
     getMorePosts,
+    getPosts,
   }
 }

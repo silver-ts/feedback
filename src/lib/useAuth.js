@@ -31,7 +31,6 @@ export const useAuth = () => {
   watchEffect((onCleanup) => {
     // The `onAuthStateChanged` observer is only triggered on sign-in or sign-out.
     const unsubscribe = onAuthStateChanged(auth, async (userRaw) => {
-      console.log('[onAuthStateChanged]')
       await handleUser(userRaw)
     })
 
