@@ -229,7 +229,7 @@ export const addHeart = async (uid, slug) => {
 
   const batch = writeBatch(db)
   // 1. Increment heart counter
-  batch.set(postRef, { heartCount: increment(1) }, { merge: true })
+  batch.update(postRef, { heartCount: increment(1) })
   // 2. Add a new document to the heart collection
   batch.set(docRef, { uid })
 

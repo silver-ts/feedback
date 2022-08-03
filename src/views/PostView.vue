@@ -16,7 +16,7 @@ const props = defineProps({
   postId: String,
 })
 
-const { user } = inject('auth')
+const { user, username } = inject('auth')
 const post = ref(null)
 const loading = ref(true)
 
@@ -71,6 +71,7 @@ const markdownToHTML = computed(() => {
         <div v-html="markdownToHTML" class="prose w-full max-w-none mt-5 sm:mt-8"></div>
       </article>
     </section>
+
     <!-- Toolbar -->
     <aside
       v-if="post && !loading"
@@ -84,7 +85,9 @@ const markdownToHTML = computed(() => {
           }}
         </span>
       </div>
-      <HeartButton :uid="post.uid" :slug="post.slug" class="mt-4" />
+
+      <HeartButton v-if="username" :uid="post.uid" :slug="post.slug" class="mt-4" />
+
       <router-link
         v-if="user?.uid === post.uid"
         :to="`/admin/${postId}`"
@@ -95,5 +98,6 @@ const markdownToHTML = computed(() => {
     </aside>
   </main>
 
+  <!-- 404 -->
   <NotFound v-if="!post && !loading" />
 </template>

@@ -1,0 +1,73 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+
+      match /users/{userId} {
+        allow read;
+        allow write: if isValidUser(userId);
+      }
+
+      match /usernames/{username} {
+        allow read;
+        allow create: if isValidUsername(username);
+      }
+
+      // Group collection
+      match /posts/{postId} {
+        allow read;
+      }
+
+      match /users/{userId}/posts/{postId} {
+        allow read;
+        allow create: if isValidPost(userId);
+        allow update: if isValidUpdatedPost(userId) || isValidUpdatedHeartCount();
+        allow delete: if isValidUser(userId);
+      }
+
+
+      match /users/{userId}/posts/{postId}/hearts/{heartId} {
+      	allow read;
+        allow write: if isValidUser(heartId);
+      }
+
+      function isValidUser(userId) {
+        return request.auth.uid == userId;
+      }
+
+      function isValidUsername(username) {
+        let isOwner = request.auth.uid == request.resource.data.uid;
+        let isValidLength = username.size() >= 3 && username.size() <= 15;
+
+        // Check if the `username` field has been updated after the batch commit
+        let isValidUserDoc = getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.username == username;
+
+        return isOwner && isValidLength && isValidUserDoc;
+      }
+
+      function isValidPost(userId) {
+        let isCurrentDate = request.time == request.resource.data.createdAt;
+        let isValidContent = request.resource.data.content.size() < 8000 && request.resource.data.heartCount == 0;
+        let isOwner = get(/databases/$(database)/documents/users/$(request.auth.uid)).data.username == request.resource.data.username;
+
+        return isValidUser(userId) && isCurrentDate && isValidContent && isOwner;
+      }
+
+      function isValidUpdatedPost(userId) {
+        let isCurrentDate = request.time == request.resource.data.updatedAt;
+        let isValidContent = request.resource.data.content.size() < 8000;
+
+        // Check if protected fields are not included in the data
+        let isFieldProtected = !request.resource.data.diff(resource.data).affectedKeys().hasAny(['heartCount', 'uid', 'username', 'createdAt', 'title', 'slug']);
+
+        return isValidUser(userId) && isCurrentDate && isValidContent && isFieldProtected;
+      }
+
+      function isValidUpdatedHeartCount() {
+        // Check if only `heartCount` field is included
+        return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['heartCount']);
+      }
+    }
+  }
+}
+

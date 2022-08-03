@@ -140,7 +140,7 @@ const handleDeletePost = async () => {
           <textarea
             v-model="contentInput"
             placeholder="Write your feedback here ..."
-            maxlength="4000"
+            maxlength="8000"
             minlength="10"
             required
             oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
