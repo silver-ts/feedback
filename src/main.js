@@ -1,5 +1,8 @@
 import { createApp } from 'vue'
 import { createMetaManager } from 'vue-meta'
+import Toast from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
+
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faGithub, faGoogle } from '@fortawesome/free-brands-svg-icons'
@@ -10,8 +13,6 @@ import {
   faCircleCheck,
 } from '@fortawesome/free-solid-svg-icons'
 import { faHeart } from '@fortawesome/free-regular-svg-icons'
-import Toast from 'vue-toastification'
-import 'vue-toastification/dist/index.css'
 
 import App from '@/App.vue'
 import router from '@/router'

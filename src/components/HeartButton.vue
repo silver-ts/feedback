@@ -52,7 +52,7 @@ const handleRemoveHeart = async () => {
     class="mt-4 flex items-center justify-center w-full bg-indigo-500 py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-600 text-white transition-all"
   >
     <font-awesome-icon icon="fa-solid fa-heart-crack" class="mr-2" />
-    Unheart
+    <span>Unheart</span>
   </button>
   <button
     v-else
@@ -60,6 +60,6 @@ const handleRemoveHeart = async () => {
     class="mt-4 flex items-center justify-center w-full bg-indigo-500 py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-600 text-white transition-all"
   >
     <font-awesome-icon icon="fa-regular fa-heart" class="mr-2" />
-    Heart
+    <span>Heart</span>
   </button>
 </template>

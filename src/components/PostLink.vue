@@ -3,7 +3,7 @@ import { computed } from 'vue'
 
 import MetaHeader from '@/components/MetaHeader.vue'
 import { displayDate, displayDistanceToNow } from '@/utils/formatDate'
-import { readTime } from '@/utils/readTime'
+import { readTime, formatReadTime } from '@/utils/readTime'
 
 const props = defineProps({
   post: {
@@ -57,12 +57,7 @@ const createdDate = computed(() => {
       </h3>
       <div class="mt-4 sm:mt-6 flex items-center justify-start sm:justify-end">
         <span class="text-xs mr-4">
-          {{
-            readingTime.wordCount === 1
-              ? `${readingTime.wordCount} word.`
-              : `${readingTime.wordCount} words.`
-          }}
-          {{ readingTime.readTime }} min read
+          {{ formatReadTime(readingTime) }}
         </span>
         <div class="flex items-center justify-center">
           <font-awesome-icon icon="fa-regular fa-heart" class="mr-2" />

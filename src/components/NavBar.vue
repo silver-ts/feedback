@@ -21,7 +21,7 @@ const { username, loading } = inject('auth')
       </router-link>
 
       <ul class="flex items-center">
-        <!-- Menu skeleton -->
+        <!-- Menu Skeleton -->
         <li v-if="loading">
           <EmptyNavBar />
         </li>
