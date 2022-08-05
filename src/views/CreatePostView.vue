@@ -9,6 +9,7 @@ import { marked } from 'marked'
 
 import AuthCheck from '@/components/AuthCheck.vue'
 import PageLoader from '@/components/PageLoader.vue'
+import PostDetails from '@/components/PostDetails.vue'
 import useToastNotify from '@/lib/useToastNotify'
 import { createNewPost, getUserPostContent, getUserDocByUsername, deletePost } from '@/lib/db'
 
@@ -177,9 +178,16 @@ const handleDeletePost = async () => {
 
       <!-- Toolbar -->
       <aside
-        class="sticky max-w-xs w-full h-60 mx-auto sm:top-[length:var(--aside-top)] right-0 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:p-5 text-center"
+        class="sticky max-w-xs w-full h-fit mx-auto sm:top-[length:var(--aside-top)] right-0 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:p-5 text-center divide-y divide-gray-300"
       >
         <div class="flex flex-col">
+          <router-link
+            v-if="postId"
+            :to="`/${username}/${postId}`"
+            class="mb-4 bg-transparent py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-500 text-indigo-500 hover:text-white transition-all relative h-11"
+          >
+            Back to Post
+          </router-link>
           <button
             @click="handlePreview"
             class="w-full bg-indigo-500 py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-600 text-white transition-all relative h-11"
@@ -193,6 +201,13 @@ const handleDeletePost = async () => {
             Delete
           </button>
         </div>
+
+        <PostDetails
+          :createdAt="post.createdAt.seconds"
+          :updatedAt="post.updatedAt.seconds"
+          :content="contentInput"
+          class="mt-4 pt-4"
+        />
       </aside>
     </main>
   </AuthCheck>

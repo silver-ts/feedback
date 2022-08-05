@@ -3,17 +3,24 @@ const WPM = 265 // Reading speed for the average reader in Word per minute (WPM)
 /**
  * Calculate estimated reading time
  * @param {string} content
- * @returns {object} readTime in minutes and wordCount
+ * @returns {object} ReadTime in minutes and wordCount
  */
-const readTime = (content) => {
+export const readTime = (content) => {
   if (!content) {
     return { readTime: 0, wordCount: 0 }
   }
 
-  const words = content.trim().split(/\s+/).length
-  const time = Math.ceil(words / WPM)
+  const wordCount = content.trim().split(/\s+/).length
+  const readTime = Math.ceil(wordCount / WPM)
 
-  return { readTime: time, wordCount: words }
+  return { readTime, wordCount }
 }
 
-export default readTime
+/**
+ * Render string with readtime and wordCount
+ * @param {{wordCount, readTime}} readTime ReadTime in minutes and wordCount
+ * @returns {string}
+ */
+export const formatReadTime = ({ wordCount, readTime }) => {
+  return `${wordCount === 1 ? `${wordCount} word` : `${wordCount} words`}. ${readTime} min read`
+}

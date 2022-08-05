@@ -7,6 +7,7 @@ import { addHeart, removeHeart, getHeartDocRef } from '@/lib/db'
 const props = defineProps({
   uid: String,
   slug: String,
+  heartCount: Number,
 })
 
 const isHearted = ref(false)
@@ -35,10 +36,20 @@ const handleRemoveHeart = async () => {
 </script>
 
 <template>
+  <div
+    :class="`${isHearted ? 'text-indigo-600' : ''}`"
+    class="flex items-center justify-center text-base font-semibold"
+  >
+    <font-awesome-icon icon="fa-regular fa-heart" class="mr-2" />
+    <span>
+      {{ heartCount === 1 ? `${heartCount} Reaction` : `${heartCount} Reactions` }}
+    </span>
+  </div>
+
   <button
     v-if="isHearted"
     @click="handleRemoveHeart"
-    class="flex items-center justify-center w-full bg-indigo-500 py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-600 text-white transition-all"
+    class="mt-4 flex items-center justify-center w-full bg-indigo-500 py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-600 text-white transition-all"
   >
     <font-awesome-icon icon="fa-solid fa-heart-crack" class="mr-2" />
     Unheart
@@ -46,7 +57,7 @@ const handleRemoveHeart = async () => {
   <button
     v-else
     @click="handleAddHeart"
-    class="flex items-center justify-center w-full bg-indigo-500 py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-600 text-white transition-all"
+    class="mt-4 flex items-center justify-center w-full bg-indigo-500 py-2 px-4 rounded-md border border-indigo-500 hover:bg-indigo-600 text-white transition-all"
   >
     <font-awesome-icon icon="fa-regular fa-heart" class="mr-2" />
     Heart

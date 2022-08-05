@@ -3,7 +3,7 @@ import { computed } from 'vue'
 
 import MetaHeader from '@/components/MetaHeader.vue'
 import { displayDate, displayDistanceToNow } from '@/utils/formatDate'
-import readTime from '@/utils/readTime'
+import { readTime } from '@/utils/readTime'
 
 const props = defineProps({
   post: {

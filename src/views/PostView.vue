@@ -7,6 +7,7 @@ import MetaHeader from '@/components/MetaHeader.vue'
 import NotFound from '@/components/NotFound.vue'
 import HeartButton from '@/components/HeartButton.vue'
 import PageLoader from '@/components/PageLoader.vue'
+import PostDetails from '@/components/PostDetails.vue'
 import useReactiveMeta from '@/lib/useReactiveMeta'
 import { getUserDocByUsername, getPostDocRef } from '@/lib/db'
 import { displayDate } from '@/utils/formatDate'
@@ -54,7 +55,11 @@ const markdownToHTML = computed(() => {
 </script>
 
 <template>
+  <!-- Loading -->
   <PageLoader :loading="loading" />
+
+  <!-- 404 -->
+  <NotFound v-if="!post && !loading" />
 
   <main v-if="post && !loading" class="flex relative flex-col md:flex-row">
     <!-- Post content -->
@@ -75,19 +80,14 @@ const markdownToHTML = computed(() => {
     <!-- Toolbar -->
     <aside
       v-if="post && !loading"
-      class="sticky max-w-xs w-full h-60 mx-auto sm:top-[length:var(--aside-top)] right-0 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:p-5 text-center"
+      class="sticky max-w-xs w-full h-fit mx-auto sm:top-[length:var(--aside-top)] right-0 bg-white rounded-lg border border-gray-400/50 drop-shadow-sm p-4 sm:p-5 text-center divide-y divide-gray-300"
     >
-      <div class="flex items-center justify-center">
-        <font-awesome-icon icon="fa-regular fa-heart" class="mr-2" />
-        <span>
-          {{
-            post.heartCount === 1 ? `${post.heartCount} Reaction` : `${post.heartCount} Reactions`
-          }}
-        </span>
-      </div>
-
-      <HeartButton v-if="username" :uid="post.uid" :slug="post.slug" class="mt-4" />
-
+      <HeartButton
+        v-if="username"
+        :uid="post.uid"
+        :slug="post.slug"
+        :heartCount="post.heartCount"
+      />
       <router-link
         v-if="user?.uid === post.uid"
         :to="`/admin/${postId}`"
@@ -95,9 +95,12 @@ const markdownToHTML = computed(() => {
       >
         Edit
       </router-link>
+      <PostDetails
+        :createdAt="post.createdAt.seconds"
+        :updatedAt="post.updatedAt.seconds"
+        :content="post.content"
+        class="mt-4 pt-4"
+      />
     </aside>
   </main>
-
-  <!-- 404 -->
-  <NotFound v-if="!post && !loading" />
 </template>
