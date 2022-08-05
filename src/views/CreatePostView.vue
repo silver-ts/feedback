@@ -203,8 +203,8 @@ const handleDeletePost = async () => {
         </div>
 
         <PostDetails
-          :createdAt="post.createdAt.seconds"
-          :updatedAt="post.updatedAt.seconds"
+          :createdAt="post?.createdAt.seconds"
+          :updatedAt="post?.updatedAt.seconds"
           :content="contentInput"
           class="mt-4 pt-4"
         />

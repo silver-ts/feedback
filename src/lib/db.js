@@ -21,12 +21,13 @@ import globals from '@/globals'
 
 /**
  * Get `hearts` document reference from Firebase
- * @param {string} uid User ID
+ * @param {string} currentUserId User ID
+ * @param {string} uid Post author ID
  * @param {string} slug Post ID
  * @returns {object} docRef
  */
-export const getHeartDocRef = (uid, slug) => {
-  return doc(db, `users/${uid}/posts/${slug}/hearts`, uid)
+export const getHeartDocRef = (currentUserId, uid, slug) => {
+  return doc(db, `users/${uid}/posts/${slug}/hearts`, currentUserId)
 }
 
 /**
@@ -220,11 +221,12 @@ export const deletePost = async (uid, slug) => {
 
 /**
  * Increment heart counter for a given post
- * @param {string} uid User ID
+ * @param {string} currentUserId User ID
+ * @param {string} uid Post author ID
  * @param {string} slug Post ID
  */
-export const addHeart = async (uid, slug) => {
-  const docRef = getHeartDocRef(uid, slug)
+export const addHeart = async (currentUserId, uid, slug) => {
+  const docRef = getHeartDocRef(currentUserId, uid, slug)
   const postRef = getPostDocRef(uid, slug)
 
   const batch = writeBatch(db)
@@ -238,11 +240,12 @@ export const addHeart = async (uid, slug) => {
 
 /**
  * Decrement heart counter for a given post
- * @param {string} uid User ID
+ * @param {string} currentUserId User ID
+ * @param {string} uid Post author ID
  * @param {string} slug Post ID
  */
-export const removeHeart = async (uid, slug) => {
-  const docRef = getHeartDocRef(uid, slug)
+export const removeHeart = async (currentUserId, uid, slug) => {
+  const docRef = getHeartDocRef(currentUserId, uid, slug)
   const postRef = getPostDocRef(uid, slug)
 
   const batch = writeBatch(db)

@@ -15,9 +15,13 @@ const readingTime = computed(() => readTime(props.content))
 
 <template>
   <div class="text-left text-sm text-gray-600">
-    <div><span class="font-semibold">Created:</span> {{ displayDate(createdAt) }}</div>
-    <div><span class="font-semibold">Updated:</span> {{ displayDate(updatedAt) }}</div>
-    <div class="mt-4 text-base text-gray-800">
+    <div v-if="createdAt">
+      <span class="font-semibold">Created:</span> {{ displayDate(createdAt) }}
+    </div>
+    <div v-if="updatedAt">
+      <span class="font-semibold">Updated:</span> {{ displayDate(updatedAt) }}
+    </div>
+    <div :class="`${createdAt && updatedAt ? 'mt-4' : ''}`" class="text-base text-gray-800">
       {{ formatReadTime(readingTime) }}
     </div>
   </div>

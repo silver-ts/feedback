@@ -28,7 +28,7 @@ service cloud.firestore {
 
       match /users/{userId}/posts/{postId}/hearts/{heartId} {
       	allow read;
-        allow write;
+        allow write: if request.auth.uid == heartId;
       }
 
       function isValidUser(userId) {

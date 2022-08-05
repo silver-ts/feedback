@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onUnmounted, onMounted } from 'vue'
+import { ref, onUnmounted, onMounted, inject } from 'vue'
 import { onSnapshot } from 'firebase/firestore'
 
 import { addHeart, removeHeart, getHeartDocRef } from '@/lib/db'
@@ -10,12 +10,13 @@ const props = defineProps({
   heartCount: Number,
 })
 
+const { user } = inject('auth')
 const isHearted = ref(false)
 
 // Listen to the `heart` document
 const unsubscribe = onMounted(() => {
   return onSnapshot(
-    getHeartDocRef(props.uid, props.slug),
+    getHeartDocRef(user.value.uid, props.uid, props.slug),
     { includeMetadataChanges: true },
     (doc) => {
       isHearted.value = doc.exists()
@@ -27,11 +28,11 @@ const unsubscribe = onMounted(() => {
 onUnmounted(() => unsubscribe())
 
 const handleAddHeart = async () => {
-  await addHeart(props.uid, props.slug)
+  await addHeart(user.value.uid, props.uid, props.slug)
 }
 
 const handleRemoveHeart = async () => {
-  await removeHeart(props.uid, props.slug)
+  await removeHeart(user.value.uid, props.uid, props.slug)
 }
 </script>
 
