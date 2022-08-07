@@ -15,12 +15,12 @@ useMeta({
       name: 'twitter:description',
       content: '✒️ A public feedback board with user voting',
     },
-    { name: 'twitter:image', content: '' },
+    { name: 'twitter:image', content: 'https://vue-feedback-ryuuto829.netlify.app/og.png' },
     // Facebook OG
     { property: 'og:title', content: 'Vue Feedback' },
     { property: 'og:site_name', content: 'Vue Feedback' },
     { property: 'og:type', content: 'website' },
-    { property: 'og:image', content: '' },
+    { property: 'og:image', content: 'https://vue-feedback-ryuuto829.netlify.app/og.png' },
     {
       property: 'og:description',
       content: '✒️ A public feedback board with user voting',

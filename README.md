@@ -1,48 +1,39 @@
-# vue-feedback
+<div align="center">
 
-This template should help get you started developing with Vue 3 in Vite.
+# Vue Feedback
 
-## Recommended IDE Setup
+Easily add user suggestions and feedbacks.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+**vue-feedback-ryuuto829.netlify.app**
 
-## Customize configuration
+![demo](https://raw.githubusercontent.com/ryuuto829/vue-feedback/master/_assets/vue-feedback-demo.gif)
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+</div>
 
-## Project Setup
+## Getting Started
 
-```sh
+1. Install dependencies
+
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+2. Change environment variables. See `.env.example` for an example.
 
-```sh
+3. Run the development server
+
+```bash
 npm run dev
 ```
 
-### Compile and Minify for Production
+## Features
 
-```sh
-npm run build
-```
+...
 
-### Run Headed Component Tests with [Cypress Component Testing](https://on.cypress.io/component)
+## Built Using
 
-```sh
-npm run test:unit # or `npm run test:unit:ci` for headless testing
-```
-
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
-
-```sh
-npm run build
-npm run test:e2e # or `npm run test:e2e:ci` for headless testing
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+- Vue
+- Firebase
+- Tailwind CSS
+- Headless UI
+- Marked-js
