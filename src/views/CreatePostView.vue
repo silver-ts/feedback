@@ -19,6 +19,7 @@ const props = defineProps({
 
 const { user, username } = inject('auth')
 const router = useRouter()
+const textarea = ref(null)
 
 const isPreview = ref(false)
 const isPublished = ref(false)
@@ -53,13 +54,21 @@ watchEffect(async () => {
   }
 })
 
+const resizeTextarea = () => {
+  if (textarea.value) {
+    // Update height to fit the content
+    textarea.value.style.height = textarea.value.scrollHeight + 'px'
+
+    // Hide scroll
+    textarea.value.style['overflow-y'] = 'hidden'
+  }
+}
+
+watchEffect(() => resizeTextarea())
+
 // Ensure using URL-friendly slug
 const slug = computed(() => {
   return encodeURI(kebabCase(titleInput.value))
-})
-
-const markdownToHTML = computed(() => {
-  return marked(contentInput.value)
 })
 
 const handleUpdatePost = async () => {
@@ -95,6 +104,10 @@ const handleUpdatePost = async () => {
   useToastNotify(props.postId ? 'Post updated successfully!' : 'Post created successfully!')
   router.push('/admin')
 }
+
+const markdownToHTML = computed(() => {
+  return marked(contentInput.value)
+})
 
 const handlePreview = () => {
   isPreview.value = !isPreview.value
@@ -139,13 +152,15 @@ const handleDeletePost = async () => {
           />
           <p class="py-2 sm:py-4">Post ID: {{ slug }}</p>
           <textarea
+            ref="textarea"
             v-model="contentInput"
+            @input="resizeTextarea"
             placeholder="Write your feedback here ..."
             maxlength="8000"
             minlength="10"
             required
-            oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
-            class="py-2 sm:py-4 h-full w-full resize-none overflow-hidden focus:outline-none"
+            autofocus="true"
+            class="py-2 sm:py-4 h-full w-full resize-none focus:outline-none"
           >
           </textarea>
 
