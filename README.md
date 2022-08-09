@@ -1,17 +1,15 @@
-<div align="center">
+# Simple Feedback System
+Easily ask for and receive feedbacks from others.
 
-# Vue Feedback
+## Technologies & Tools
 
-Easily add user suggestions and feedbacks.
-
-**https://vue-feedback-ryuuto829.netlify.app/**
-
-![demo](https://raw.githubusercontent.com/ryuuto829/vue-feedback/master/_assets/vue-feedback-demo.gif)
-
-</div>
+- Vue
+- Firebase
+- Tailwind CSS
+- Headless UI
+- Marked-js
 
 ## Getting Started
-
 1. Install dependencies
 
 ```bash
@@ -39,11 +37,3 @@ npm run dev
 - Paginated Home page feed
 - Realtime data from Firebase
 - Firestore backend security
-
-## Built Using
-
-- Vue
-- Firebase
-- Tailwind CSS
-- Headless UI
-- Marked-js
