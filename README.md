@@ -4,7 +4,7 @@
 
 Easily add user suggestions and feedbacks.
 
-**vue-feedback-ryuuto829.netlify.app**
+**https://vue-feedback-ryuuto829.netlify.app/**
 
 ![demo](https://raw.githubusercontent.com/ryuuto829/vue-feedback/master/_assets/vue-feedback-demo.gif)
 
@@ -28,7 +28,17 @@ npm run dev
 
 ## Features
 
-...
+- Firebase authentication
+- Custom Firebase usernames
+- Reactive forms and post preview
+- Firestore CRUD operations
+- Markdown support
+- Upvote (heart) posts in realtime
+- Fetch user profiles
+- Admin dashboard (for editing posts)
+- Paginated Home page feed
+- Realtime data from Firebase
+- Firestore backend security
 
 ## Built Using
 
